@@ -19,9 +19,9 @@ export default defineConfig({
       options: {
         variants: [
           {
-            weight: 400,
+            weight: "100 900",
             style: "normal",
-            src: ["./src/assets/fonts/inter-regular.woff2"],
+            src: ["./src/assets/fonts/inter-variable.woff2"],
           },
         ],
       },
