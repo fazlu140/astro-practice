@@ -1,14 +1,19 @@
 /* 1. Design tokens */
 :root {
   /* Swatches */
-  --light-100: #ffffff;
-  --light-200: #ebebeb;
-  --light-300: #d9d9d9;
-  --dark-700: #453e42;
-  --dark-800: #2f2b2d;
-  --dark-900: #1f1d1e;
-  --brand-500: #c6fb50;
-  --brand-text: var(--dark-900);
+  --white: #ffffff;
+  --orange-50: #fff7f4;
+  --orange-100: #ffefea;
+  --orange-300: #f89f66;
+  --orange-500: #ea7a32;
+  --orange-700: #d8592d;
+  --neutral-100: #faf8f7;
+  --neutral-200: #f2e7e4;
+  --neutral-600: #af8a7a;
+  --neutral-700: #8b6251;
+  --neutral-800: #624b43;
+  --neutral-900: #4f3e39;
+  --neutral-1000: #1b1918;
 
   /* Typography primitives */
   --primary-family: var(--font-inter, system-ui, sans-serif);
@@ -259,21 +264,21 @@
 .theme-brand .theme-invert {
   color-scheme: light;
 
-  --background: var(--light-300);
-  --background-2: var(--light-200);
-  --background-3: var(--light-100);
+  --background: var(--white);
+  --background-2: var(--neutral-100);
+  --background-3: var(--orange-50);
   --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--dark-900);
-  --text-2: color-mix(in lab, currentcolor 60%, transparent);
-  --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: color-mix(in srgb, var(--brand-500), black 20%);
+  --text: var(--neutral-1000);
+  --text-2: var(--neutral-800);
+  --border: var(--neutral-200);
+  --heading-accent: var(--orange-700);
 
   --selection-background: var(--text);
   --selection-text: var(--background);
 
-  --button-background: var(--brand-500);
+  --button-background: var(--orange-500);
   --button-border: var(--button-background);
-  --button-text: var(--brand-text);
+  --button-text: var(--neutral-1000);
   --button-background-hover: var(--text);
   --button-border-hover: var(--button-background-hover);
   --button-text-hover: var(--background);
@@ -288,28 +293,28 @@
   --link-text: var(--text);
   --link-border: var(--border);
   --link-text-hover: var(--text);
-  --link-border-hover: var(--brand-500);
+  --link-border-hover: var(--orange-700);
 }
 
 .theme-dark,
 .theme-light .theme-invert {
   color-scheme: dark;
 
-  --background: var(--dark-900);
-  --background-2: var(--dark-800);
-  --background-3: var(--dark-700);
+  --background: var(--neutral-1000);
+  --background-2: var(--neutral-900);
+  --background-3: var(--neutral-800);
   --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--light-100);
+  --text: var(--white);
   --text-2: color-mix(in lab, currentcolor 60%, transparent);
   --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: var(--brand-500);
+  --heading-accent: var(--orange-700);
 
   --selection-background: var(--text);
   --selection-text: var(--background);
 
-  --button-background: var(--brand-500);
+  --button-background: var(--orange-500);
   --button-border: var(--button-background);
-  --button-text: var(--brand-text);
+  --button-text: var(--neutral-1000);
   --button-background-hover: var(--text);
   --button-border-hover: var(--button-background-hover);
   --button-text-hover: var(--background);
@@ -330,31 +335,31 @@
 .theme-brand {
   color-scheme: dark;
 
-  --background: var(--brand-500);
+  --background: var(--orange-500);
   --background-2: color-mix(in lab, var(--background) 90%, var(--text));
   --background-3: color-mix(in lab, var(--background) 80%, var(--text));
   --background-skeleton: color-mix(in lab, currentcolor 10%, transparent);
-  --text: var(--brand-text);
-  --text-2: color-mix(in lab, currentcolor 60%, transparent);
+  --text: var(--neutral-1000);
+  --text-2: color-mix(in lab, currentcolor 85%, transparent);
   --border: color-mix(in lab, var(--text) 20%, transparent);
   --heading-accent: color-mix(in srgb, var(--text), white 20%);
 
   --selection-background: var(--text);
   --selection-text: var(--background);
 
-  --button-background: var(--brand-text);
+  --button-background: var(--neutral-1000);
   --button-border: var(--button-background);
   --button-text: var(--background);
-  --button-background-hover: var(--light-100);
+  --button-background-hover: var(--white);
   --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--dark-900);
+  --button-text-hover: var(--neutral-1000);
 
   --button-2-background: transparent;
   --button-2-border: var(--border);
   --button-2-text: var(--text);
-  --button-2-background-hover: var(--light-100);
+  --button-2-background-hover: var(--white);
   --button-2-border-hover: var(--button-2-background-hover);
-  --button-2-text-hover: var(--dark-900);
+  --button-2-text-hover: var(--neutral-1000);
 
   --link-text: var(--text);
   --link-border: var(--border);
