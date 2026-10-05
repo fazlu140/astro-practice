@@ -140,6 +140,7 @@ const { render = true, overlap = false } = Astro.props;
     /* Clear over the first section, surfaced once the page moves */
     @supports (animation-timeline: scroll()) {
       .nav_wrap.overlap:not(.open)::before {
+        opacity: 0;
         animation: nav-surface linear both;
         animation-timeline: scroll(root);
         animation-range: 0 var(--nav-height);
@@ -147,8 +148,8 @@ const { render = true, overlap = false } = Astro.props;
     }
 
     @keyframes nav-surface {
-      from {
-        opacity: 0;
+      to {
+        opacity: 1;
       }
     }
 
