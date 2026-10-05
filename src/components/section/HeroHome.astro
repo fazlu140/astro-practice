@@ -1,0 +1,610 @@
+---
+import type { ComponentProps } from "astro/types";
+import Section from "@/components/wrapper/Section.astro";
+import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
+import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
+import Heading from "@/components/typography/Heading.astro";
+import Paragraph from "@/components/typography/Paragraph.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/media/Icon.astro";
+import Img from "@/components/media/Img.astro";
+import LogoStrip from "@/components/content/LogoStrip.astro";
+import tileMark from "@/assets/graphics/hero/tile-mark.svg";
+import cart from "@/assets/graphics/hero/cart.svg";
+import danger from "@/assets/graphics/hero/danger.svg";
+import payment from "@/assets/graphics/hero/payment.svg";
+import shieldAlert from "@/assets/graphics/hero/shield-alert.svg";
+import shieldTransfer from "@/assets/graphics/hero/shield-transfer.svg";
+import avatar from "@/assets/graphics/hero/avatar.png";
+import veria from "@/assets/logos/veria.svg";
+import sample from "@/assets/logos/sample.svg";
+import faro from "@/assets/logos/faro.svg";
+import mui from "@/assets/logos/mui.svg";
+import converseAi from "@/assets/logos/converse-ai.svg";
+
+type Props = Omit<
+  ComponentProps<typeof Section>,
+  | "theme"
+  | "paddingTop"
+  | "paddingBottom"
+  | "gap"
+  | "align"
+  | "fullHeight"
+  | "containerClass"
+  | "containerAttrs"
+> & {
+  /** Heading text. */
+  heading: string;
+  /** Supporting text under the heading. */
+  text?: string;
+};
+
+const { render = true, heading, text, class: className, ...rest } = Astro.props;
+---
+
+{
+  render && heading && (
+    <Section
+      class={["hero-home_wrap", className].filter(Boolean).join(" ")}
+      paddingTop="none"
+      gap="7"
+      containerClass="hero-home_content"
+      {...rest}
+    >
+      <div slot="background" class="hero-home_stage" aria-hidden="true">
+        <div class="hero-home_artboard">
+          <div class="hero-home_glow" />
+          <div class="hero-home_dots" />
+          <div class="hero-home_ring" />
+          <div class="hero-home_ring" />
+          <div class="hero-home_ring" />
+          <div class="hero-home_ring" />
+          <div class="hero-home_ring" />
+
+          <div class="hero-home_tile">
+            <Icon src={tileMark} />
+          </div>
+
+          <div class="hero-home_float">
+            <Img
+              class="hero-home_shield"
+              src={shieldAlert}
+              width={67}
+              height={78}
+              transparent
+              loading="eager"
+            />
+            <div class="hero-home_card">
+              <div class="hero-home_card_name">
+                <span class="hero-home_light" />
+                Hedge Trade Detected
+              </div>
+              <div class="hero-home_card_details">
+                <div>
+                  <div class="hero-home_card_person">William Jones</div>
+                  <div class="hero-home_card_meta">Trader ID: #T89245</div>
+                </div>
+                <div class="hero-home_card_rule" />
+                <div class="hero-home_card_row">
+                  <span class="hero-home_pill">
+                    <Icon class="hero-home_danger" src={danger} />3 linked
+                    accounts
+                  </span>
+                  <span class="hero-home_pill blocked">Blocked</span>
+                </div>
+              </div>
+              <div class="hero-home_card_action">Notify Management</div>
+            </div>
+          </div>
+
+          <div class="hero-home_float">
+            <Img
+              class="hero-home_shield"
+              src={shieldTransfer}
+              width={70}
+              height={70}
+              transparent
+              loading="eager"
+            />
+            <div class="hero-home_card">
+              <div class="hero-home_card_name">
+                <Icon class="hero-home_cart" src={cart} />
+                Payout automation
+              </div>
+              <div class="hero-home_card_details">
+                <div class="hero-home_card_row between">
+                  <div class="hero-home_card_row">
+                    <Img
+                      class="hero-home_avatar"
+                      src={avatar}
+                      variant="densities"
+                      width={26}
+                      height={26}
+                      loading="eager"
+                    />
+                    <div>
+                      <div class="hero-home_card_person">Maria Bator</div>
+                      <div class="hero-home_card_meta">#T89245</div>
+                    </div>
+                  </div>
+                  <span class="hero-home_pill completed">Completed</span>
+                </div>
+                <div class="hero-home_card_rule" />
+                <div class="hero-home_card_row between">
+                  <span class="hero-home_card_label">Total amount</span>
+                  <span class="hero-home_card_value">
+                    <strong>$1,500</strong>
+                    <Icon class="hero-home_payment" src={payment} />
+                  </span>
+                </div>
+                <div class="hero-home_card_row between">
+                  <span class="hero-home_card_label">Method</span>
+                  <span class="hero-home_card_value">Rise</span>
+                </div>
+              </div>
+              <div class="hero-home_card_action">Approve and send</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ContentWrapper centered>
+        <Heading class="hero-home_title" tag="h1" maxWidth={16}>
+          {heading}
+        </Heading>
+        <Paragraph class="hero-home_text" variant="large" maxWidth={52}>
+          {text}
+        </Paragraph>
+        <ButtonWrapper class="hero-home_buttons" marginTop="7">
+          <Button element="link" href="/contact">
+            Book a Demo
+          </Button>
+          <Button element="link" href="/pricing" emphasis="secondary">
+            View Pricing
+          </Button>
+        </ButtonWrapper>
+      </ContentWrapper>
+
+      <LogoStrip class="hero-home_logos">
+        Powering <strong>50+ firms</strong> globally with conflict-free
+        infrastructure.
+        <Fragment slot="logos">
+          <Img src={veria} alt="Veria" width={94} height={19} transparent />
+          <Img src={sample} alt="Sample" width={100} height={31} transparent />
+          <Img src={faro} alt="Faro" width={47} height={37} transparent />
+          <Img src={mui} alt="MUI" width={59} height={23} transparent />
+          <Img
+            src={converseAi}
+            alt="Converse.ai"
+            width={134}
+            height={19}
+            transparent
+          />
+        </Fragment>
+      </LogoStrip>
+    </Section>
+  )
+}
+
+<style is:global>
+  @layer components {
+    /* Section */
+    .hero-home_wrap {
+      --_u: calc(min(100cqw, 30rem) / 640);
+      --_offset: 2.5rem;
+      --_clear: 1rem;
+      --_float-1: 296;
+      --_float-2: 689;
+      --_blocked: #cc2e46;
+      --_completed: #157a66;
+      container-type: inline-size;
+      background-image: linear-gradient(
+        to top,
+        var(--background) 83%,
+        var(--background-3) 94%
+      );
+      @media (width >= 48rem) {
+        --_u: calc(min(100cqw, 90rem) / 1200);
+        --_offset: 0rem;
+        --_clear: 0rem;
+        --_float-1: 55.5;
+        --_float-2: 940;
+      }
+    }
+
+    .hero-home_content {
+      padding-top: calc(var(--_u) * 376 + var(--_offset) + var(--_clear));
+    }
+
+    .hero-home_text {
+      color: var(--text-2);
+    }
+
+    /* Artboard */
+    .hero-home_stage {
+      overflow: clip;
+    }
+
+    .hero-home_artboard {
+      position: absolute;
+      top: var(--_offset);
+      left: 50%;
+      width: calc(var(--_u) * 1200);
+      height: calc(var(--_u) * 900);
+      margin-left: calc(var(--_u) * -600);
+    }
+
+    .hero-home_glow {
+      position: absolute;
+      inset: 0 0 auto;
+      height: calc(var(--_u) * 440);
+      background-image:
+        radial-gradient(
+          ellipse 30% 46% at 20% 50%,
+          var(--orange-300),
+          color-mix(in lab, var(--orange-300) 45%, transparent) 45%,
+          transparent
+        ),
+        radial-gradient(
+          ellipse 28% 46% at 80% 50%,
+          color-mix(in lab, var(--orange-700) 60%, transparent),
+          color-mix(in lab, var(--orange-700) 22%, transparent) 45%,
+          transparent
+        ),
+        radial-gradient(
+          ellipse 34% 46% at 50% 44%,
+          var(--orange-100),
+          transparent
+        );
+    }
+
+    .hero-home_dots {
+      position: absolute;
+      inset: 0 calc(var(--_u) * 284) auto calc(var(--_u) * 48);
+      height: calc(var(--_u) * 381);
+      background-image: radial-gradient(
+        circle,
+        var(--white) calc(var(--_u) * 0.9),
+        transparent calc(var(--_u) * 1.2)
+      );
+      background-size: calc(var(--_u) * 7) calc(var(--_u) * 7);
+      mix-blend-mode: soft-light;
+      opacity: 0.6;
+    }
+
+    .hero-home_ring {
+      --_w: 1174;
+      --_h: 1173;
+      --_y: -309;
+      --_r: 73;
+      position: absolute;
+      top: calc(var(--_u) * var(--_y));
+      left: calc(50% - var(--_u) * var(--_w) / 2);
+      width: calc(var(--_u) * var(--_w));
+      height: calc(var(--_u) * var(--_h));
+      background-color: color-mix(in lab, var(--white) 20%, transparent);
+      border: var(--border-width) solid
+        color-mix(in lab, var(--white) 80%, transparent);
+      border-radius: calc(var(--_u) * var(--_r));
+      box-shadow: 0 0 0 var(--border-width)
+        color-mix(in lab, var(--neutral-200) 40%, transparent);
+      &:nth-of-type(4) {
+        --_w: 1028;
+        --_h: 1028;
+        --_y: -329;
+        --_r: 64;
+      }
+      &:nth-of-type(5) {
+        --_w: 880;
+        --_h: 847;
+        --_y: -230;
+        --_r: 51;
+      }
+      &:nth-of-type(6) {
+        --_w: 697;
+        --_h: 654;
+        --_y: -131;
+        --_r: 29;
+      }
+      &:nth-of-type(7) {
+        --_w: 460;
+        --_h: 485;
+        --_y: -62;
+        --_r: 29;
+      }
+    }
+
+    /* App tile */
+    .hero-home_tile {
+      position: absolute;
+      top: calc(var(--_u) * 176.6);
+      left: calc(50% - var(--_u) * 60);
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 120);
+      height: calc(var(--_u) * 120);
+      background-color: var(--orange-100);
+      background-image:
+        radial-gradient(circle at 88% 30%, var(--orange-700), transparent 62%),
+        radial-gradient(circle at 18% 78%, var(--orange-300), transparent 70%);
+      border: calc(var(--_u) * 1.5) solid var(--white);
+      border-radius: calc(var(--_u) * 24);
+      box-shadow:
+        inset 0 0 calc(var(--_u) * 10)
+          color-mix(in lab, var(--white) 60%, transparent),
+        0 calc(var(--_u) * 12) calc(var(--_u) * 20)
+          color-mix(in lab, var(--orange-300) 25%, transparent);
+      & .icon {
+        --_size: calc(var(--_u) * 50);
+      }
+    }
+
+    /* Floating cards */
+    .hero-home_float {
+      position: absolute;
+      top: calc(var(--_u) * 189.4);
+      left: calc(var(--_u) * var(--_float-1));
+      width: calc(var(--_u) * 215);
+      font-size: calc(var(--_u) * 10.3);
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+      & + & {
+        top: calc(var(--_u) * 180);
+        left: calc(var(--_u) * var(--_float-2));
+      }
+    }
+
+    .hero-home_shield {
+      position: absolute;
+      top: calc(var(--_u) * -69);
+      left: calc(var(--_u) * 73.3);
+      width: calc(var(--_u) * 66.6);
+      .hero-home_float + .hero-home_float & {
+        top: calc(var(--_u) * -62.4);
+        left: calc(var(--_u) * 72.8);
+        width: calc(var(--_u) * 69.9);
+      }
+    }
+
+    .hero-home_card {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 12);
+      padding: calc(var(--_u) * 12);
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 12);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 4) var(--white),
+        0 calc(var(--_u) * 3) calc(var(--_u) * 6)
+          color-mix(in lab, var(--neutral-200) 60%, transparent),
+        0 calc(var(--_u) * 12) calc(var(--_u) * 24)
+          color-mix(in lab, var(--neutral-600) 14%, transparent),
+        0 calc(var(--_u) * 18) calc(var(--_u) * 36)
+          color-mix(in lab, var(--neutral-700) 10%, transparent);
+      color: var(--neutral-900);
+    }
+
+    .hero-home_card_name {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 5.6);
+      color: var(--neutral-800);
+      font-size: calc(var(--_u) * 12.2);
+      font-weight: var(--primary-bold);
+    }
+
+    .hero-home_light {
+      width: calc(var(--_u) * 11.4);
+      height: calc(var(--_u) * 11.4);
+      background-image: radial-gradient(
+        circle,
+        var(--orange-500) 35%,
+        var(--orange-100) 40%
+      );
+      border-radius: 50%;
+    }
+
+    .hero-home_card_details {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 8);
+      padding: calc(var(--_u) * 12) calc(var(--_u) * 8);
+      border: var(--border-width) solid var(--border);
+      border-radius: calc(var(--_u) * 6);
+    }
+
+    .hero-home_card_person {
+      font-size: calc(var(--_u) * 12);
+      font-weight: var(--primary-medium);
+      .hero-home_float + .hero-home_float & {
+        font-size: calc(var(--_u) * 10.7);
+      }
+    }
+
+    .hero-home_card_meta {
+      margin-top: calc(var(--_u) * 3);
+      color: var(--neutral-700);
+      .hero-home_float + .hero-home_float & {
+        font-size: calc(var(--_u) * 9.5);
+      }
+    }
+
+    .hero-home_card_rule {
+      height: var(--border-width);
+      background-color: var(--border);
+    }
+
+    .hero-home_card_row {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 5);
+      &.between {
+        justify-content: space-between;
+      }
+    }
+
+    .hero-home_card_label {
+      color: var(--neutral-800);
+      font-size: calc(var(--_u) * 9.9);
+      font-weight: var(--primary-medium);
+    }
+
+    .hero-home_card_value {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 3.3);
+      color: var(--neutral-1000);
+      & strong {
+        font-size: calc(var(--_u) * 9.9);
+        font-weight: var(--primary-bold);
+      }
+    }
+
+    .hero-home_pill {
+      --_tone: var(--neutral-900);
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 3.8);
+      min-height: calc(var(--_u) * 17);
+      padding-inline: calc(var(--_u) * 7.5);
+      background-image: linear-gradient(
+        transparent 24%,
+        color-mix(in lab, var(--_tone) 14%, transparent)
+      );
+      border: var(--border-width) solid
+        color-mix(in lab, var(--_tone) 28%, transparent);
+      border-radius: var(--radius-round);
+      color: var(--_tone);
+      font-size: calc(var(--_u) * 8);
+      font-weight: var(--primary-medium);
+      white-space: nowrap;
+      &:not(.blocked, .completed) {
+        background-image: none;
+        border-color: var(--border);
+      }
+      &.blocked {
+        --_tone: var(--_blocked);
+      }
+      &.completed {
+        --_tone: var(--_completed);
+      }
+    }
+
+    .hero-home_card_action {
+      padding: calc(var(--_u) * 8) calc(var(--_u) * 12);
+      background-color: var(--orange-300);
+      background-image: linear-gradient(
+        transparent 24%,
+        color-mix(in lab, var(--orange-700) 25%, transparent)
+      );
+      border: var(--border-width) solid
+        color-mix(in lab, var(--orange-700) 30%, transparent);
+      border-radius: calc(var(--_u) * 8);
+      box-shadow: 0 calc(var(--_u) * 3.8) calc(var(--_u) * 3.8)
+        color-mix(in lab, var(--orange-700) 10%, transparent);
+      color: var(--neutral-1000);
+      font-weight: var(--primary-medium);
+      line-height: 1;
+      text-align: center;
+    }
+
+    .hero-home_avatar {
+      width: calc(var(--_u) * 26.3);
+      border-radius: 50%;
+    }
+
+    .hero-home_card .icon {
+      aspect-ratio: auto;
+      height: auto;
+      &.hero-home_cart {
+        --_size: calc(var(--_u) * 16);
+      }
+      &.hero-home_danger {
+        --_size: calc(var(--_u) * 9);
+      }
+      &.hero-home_payment {
+        --_size: calc(var(--_u) * 10.7);
+      }
+    }
+
+    /* Entrance */
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-home_tile {
+        animation: hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+
+      .hero-home_title {
+        animation: hero-home-lift 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+
+      .hero-home_text,
+      .hero-home_buttons,
+      .hero-home_logos {
+        animation: hero-home-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+
+      .hero-home_text {
+        animation-delay: 70ms;
+      }
+
+      .hero-home_buttons {
+        animation-delay: 140ms;
+      }
+
+      .hero-home_logos {
+        animation-delay: 210ms;
+      }
+
+      .hero-home_float {
+        --_from: -1.5rem;
+        animation: hero-home-drift 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 250ms
+          both;
+        & + & {
+          --_from: 1.5rem;
+          animation-delay: 350ms;
+        }
+      }
+
+      .hero-home_card {
+        animation: hero-home-bob 6s ease-in-out 1.2s infinite alternate;
+        .hero-home_float + .hero-home_float & {
+          animation-delay: 2.2s;
+        }
+      }
+    }
+
+    @keyframes hero-home-pop {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+    }
+
+    @keyframes hero-home-lift {
+      from {
+        transform: translateY(1rem);
+      }
+    }
+
+    @keyframes hero-home-rise {
+      from {
+        opacity: 0;
+        transform: translateY(1rem);
+      }
+    }
+
+    @keyframes hero-home-drift {
+      from {
+        opacity: 0;
+        transform: translateX(var(--_from));
+      }
+    }
+
+    @keyframes hero-home-bob {
+      to {
+        transform: translateY(-0.25rem);
+      }
+    }
+  }
+</style>
