@@ -50,7 +50,7 @@ These refine the Figma file, which is inconsistent. Where they conflict with a l
 | neutral-1000 | #1B1918 | Neutral 1000 |
 | white | #FFFFFF | White |
 
-Default theme: white background, neutral-1000 text, neutral-800 muted text, orange-500 accent. Orange text is always orange-700; orange-500 is for backgrounds only. Labels on orange buttons are neutral-1000. Check contrast on orange buttons with white text and flag anything below WCAG AA.
+Default theme: white background, neutral-1000 text, neutral-800 muted text, orange-500 accent. Orange text is orange-700 on light backgrounds and orange-300 on the dark theme; orange-500 is for backgrounds only. Labels on orange buttons are neutral-1000. Check contrast on orange buttons with white text and flag anything below WCAG AA.
 
 ## Animation and performance
 

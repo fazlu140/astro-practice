@@ -308,7 +308,7 @@
   --text: var(--white);
   --text-2: color-mix(in lab, currentcolor 60%, transparent);
   --border: color-mix(in lab, var(--text) 20%, transparent);
-  --heading-accent: var(--orange-700);
+  --heading-accent: var(--orange-300);
 
   --selection-background: var(--text);
   --selection-text: var(--background);
