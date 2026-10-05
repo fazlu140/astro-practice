@@ -165,31 +165,75 @@ const named = {
       display: inline-flex;
       justify-content: center;
       align-items: center;
+      --_shadow: var(--button-shadow-color);
+      position: relative;
+      isolation: isolate;
+      overflow: clip;
       gap: 0.5em;
-      padding: 0.75em 1.5em;
+      min-height: 2.5em;
+      padding: 0.625em 1.25em;
       background-color: var(--button-background);
+      background-image: var(--button-fill);
       color: var(--button-text);
-      border: var(--border-width) solid var(--button-border);
       border-radius: 0.5em;
+      box-shadow:
+        0 0 0 var(--border-width) var(--button-border),
+        0 0.0625em 0.0625em color-mix(in lab, var(--_shadow) 8%, transparent),
+        0 0.1875em 0.1875em color-mix(in lab, var(--_shadow) 10%, transparent),
+        0 0.375em 0.375em -0.25em
+          color-mix(in lab, var(--_shadow) 12%, transparent),
+        0 0.75em 0.75em -0.25em
+          color-mix(in lab, var(--_shadow) 10%, transparent),
+        0 1.5em 1.5em -0.25em color-mix(in lab, var(--_shadow) 12%, transparent);
+      font-weight: var(--primary-bold);
       line-height: 1.2;
+      letter-spacing: var(--letter-spacing-snug);
       text-decoration: none;
       text-align: center;
-      transition:
-        background-color var(--hover-duration) var(--hover-ease),
-        color var(--hover-duration) var(--hover-ease),
-        border-color var(--hover-duration) var(--hover-ease);
+      transition: color var(--hover-duration) var(--hover-ease);
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+      &::before {
+        background-color: var(--button-background-hover);
+        background-image: var(--button-fill-hover);
+        opacity: 0;
+        transition: opacity var(--hover-duration) var(--hover-ease);
+      }
+      &::after {
+        background-image: linear-gradient(
+          135deg,
+          transparent 30%,
+          color-mix(in lab, var(--white) 22%, transparent) 50%,
+          transparent 70%
+        );
+        box-shadow: inset 0 -0.0625em 0.125em
+          color-mix(in lab, var(--_shadow) 30%, transparent);
+      }
+
       @media (hover: hover) {
         &:hover:not(:disabled) {
-          background-color: var(--button-background-hover);
+          --button-border: var(--button-border-hover);
           color: var(--button-text-hover);
-          border-color: var(--button-border-hover);
+          &::before {
+            opacity: 1;
+          }
         }
       }
       &.secondary {
         --button-background: var(--button-2-background);
+        --button-fill: var(--button-2-fill);
         --button-text: var(--button-2-text);
         --button-border: var(--button-2-border);
         --button-background-hover: var(--button-2-background-hover);
+        --button-fill-hover: var(--button-2-fill-hover);
         --button-text-hover: var(--button-2-text-hover);
         --button-border-hover: var(--button-2-border-hover);
       }
@@ -201,10 +245,18 @@ const named = {
         --button-text-hover: var(--link-text-hover);
         --button-border-hover: var(--link-border);
 
+        overflow: visible;
+        min-height: 0;
         padding: 0.4em 0;
-        border: 0;
         border-bottom: var(--border-width) solid var(--button-border);
         border-radius: 0;
+        box-shadow: none;
+        font-weight: inherit;
+        letter-spacing: inherit;
+        &::before,
+        &::after {
+          content: none;
+        }
         background-image: linear-gradient(
           var(--link-border-hover),
           var(--link-border-hover)
