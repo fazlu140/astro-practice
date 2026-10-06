@@ -7,6 +7,7 @@ import Button from "@/components/Button.astro";
 import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
 import Img from "@/components/media/Img.astro";
 import Overlay from "@/components/media/Overlay.astro";
+import { slotContent } from "@/utils/slots.ts";
 
 type ImageSource = ImageMetadata | string;
 
@@ -26,7 +27,7 @@ type Base = HTMLAttributes<"div"> & {
   /** Button destination. Omit for a `<button>`. */
   buttonHref?: string;
   /** Card layout. */
-  variant?: "default" | "cover" | "stacked";
+  variant?: "default" | "cover" | "stacked" | "graphic";
   /** Color theme of element and its children. */
   theme?: "inherit" | "light" | "dark" | "brand" | "invert";
 };
@@ -35,6 +36,11 @@ type Props = Base &
   (
     | {
         variant?: "default";
+        image?: never;
+        imageAlt?: never;
+      }
+    | {
+        variant: "graphic";
         image?: never;
         imageAlt?: never;
       }
@@ -77,7 +83,9 @@ const {
   ...rest
 } = Astro.props as AllProps;
 
-const hasImage = variant !== "default" && !!image;
+const visual = await slotContent(Astro.slots);
+const hasImage = variant !== "default" && variant !== "graphic" && !!image;
+const hasVisual = variant === "graphic" && !!visual;
 const hasContent = !!(eyebrow || heading || text || buttonLabel);
 const hasTheme = variant !== "stacked" && theme !== "inherit";
 
@@ -99,7 +107,7 @@ if (import.meta.env.DEV && render) {
       '[lumos] <Card variant="default"> holds no image, so `image` was dropped. Use the cover or stacked variant to show it.',
     );
   }
-  if (variant !== "default" && !image) {
+  if (variant !== "default" && variant !== "graphic" && !image) {
     console.warn(
       `[lumos] <Card variant="${variant}"> has no \`image\`, so it renders as a plain card.`,
     );
@@ -108,7 +116,7 @@ if (import.meta.env.DEV && render) {
 ---
 
 {
-  render && (hasContent || hasImage) && (
+  render && (hasContent || hasImage || hasVisual) && (
     <div
       class:list={[
         "card_wrap",
@@ -122,6 +130,11 @@ if (import.meta.env.DEV && render) {
         <div class="card_visual">
           <Img src={image!} alt={imageAlt} />
           {variant === "cover" && <Overlay variant="gradient" />}
+        </div>
+      )}
+      {hasVisual && (
+        <div class="card_visual">
+          <Fragment set:html={visual} />
         </div>
       )}
       {hasContent && (
@@ -171,6 +184,25 @@ if (import.meta.env.DEV && render) {
       &.stacked {
         background-color: transparent;
         overflow: visible;
+      }
+      &.graphic {
+        --_padding: var(--space-5);
+        padding: var(--_padding);
+        background-color: var(--background-3);
+        border-radius: var(--radius-large);
+        & > .card_visual {
+          overflow: visible;
+          border-radius: 0;
+        }
+        & > .card_content {
+          padding: 0;
+          & .heading {
+            margin-bottom: var(--space-1);
+          }
+          & .text {
+            color: var(--text-2);
+          }
+        }
       }
     }
 

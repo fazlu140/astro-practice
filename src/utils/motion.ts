@@ -44,6 +44,10 @@ const motions: Record<string, Motion> = {
     from: { autoAlpha: 1, scaleY: 0, transformOrigin: "50% 100%" },
     to: { scaleY: 1, duration: 0.7, ease: "power3.out" },
   },
+  wipe: {
+    from: { autoAlpha: 1, scaleX: 1, transformOrigin: "100% 50%" },
+    to: { scaleX: 0, duration: 1.1, ease: "power2.inOut" },
+  },
   draw: {
     from: { autoAlpha: 1, scaleY: 0, transformOrigin: "50% 0%" },
     to: { scaleY: 1, duration: 0.9, ease: "power2.out" },
@@ -61,8 +65,10 @@ window.addEventListener("resize", () => {
 });
 
 /** Elements a scope animates, in document order. */
-export const parts = (scope: Element) =>
-  Array.from(scope.querySelectorAll<HTMLElement>("[data-motion]"));
+export const parts = (scope: Element) => [
+  ...(scope.matches("[data-motion]") ? [scope as HTMLElement] : []),
+  ...Array.from(scope.querySelectorAll<HTMLElement>("[data-motion]")),
+];
 
 /** Split a heading into masked lines, reusing the split until the width changes. */
 export function lines(element: HTMLElement) {

@@ -1,0 +1,30 @@
+---
+
+---
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { ready, reveal } from "@/utils/motion.ts";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    const scopes = gsap.utils.toArray<HTMLElement>(
+      '[data-motion-scope="view"]',
+    );
+    scopes.forEach(ready);
+    ScrollTrigger.batch(scopes, {
+      start: "top 85%",
+      once: true,
+      onEnter: (batch) =>
+        batch.forEach((scope, index) =>
+          reveal(scope as HTMLElement, { delay: index * 0.12 }),
+        ),
+    });
+    requestAnimationFrame(() => {
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    });
+  });
+</script>
