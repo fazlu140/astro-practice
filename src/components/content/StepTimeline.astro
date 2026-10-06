@@ -216,7 +216,6 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
     /* Track */
     .step-timeline_track {
       position: absolute;
-      z-index: 1;
       top: 1.125rem;
       bottom: 0;
       left: 1rem;
@@ -245,6 +244,7 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
 
     .step-timeline_marker {
       position: absolute;
+      z-index: 2;
       top: 0;
       left: 50%;
       display: grid;
@@ -279,6 +279,8 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
     }
 
     .step-timeline_stop {
+      position: relative;
+      z-index: 1;
       grid-area: 1 / 1;
       justify-self: center;
       width: 0.75rem;
