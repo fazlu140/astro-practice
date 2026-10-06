@@ -98,15 +98,15 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
             { scale: 0 },
             {
               scale: 1,
-              duration: 0.5,
+              duration: 0.4,
               ease: "back.out(2.4)",
-              stagger: 0.12,
+              stagger: 0.07,
               overwrite: true,
             },
           );
         };
 
-        const go = (index: number, duration = 0.9) => {
+        const go = (index: number, duration = 0.65) => {
           const line = track.getBoundingClientRect();
           const stop = stops[index].getBoundingClientRect();
           const across = line.width > line.height;
@@ -150,28 +150,28 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
               {
                 autoAlpha: 1,
                 scale: 1,
-                duration: 0.6,
+                duration: 0.5,
                 ease: "back.out(2)",
-                stagger: 0.12,
+                stagger: 0.07,
               },
               0,
             )
-            .set(track, { autoAlpha: 1 }, 0.15)
+            .set(track, { autoAlpha: 1 }, 0.1)
             .fromTo(
               [...find(".step-timeline_line"), ...marker, ...stops],
               { autoAlpha: 0 },
-              { autoAlpha: 1, duration: 0.6, stagger: 0.08 },
-              0.15,
+              { autoAlpha: 1, duration: 0.4, stagger: 0.05 },
+              0.1,
             )
             .fromTo(
               find(".step-timeline_card"),
               { autoAlpha: 0, y: 28 },
-              { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.12 },
-              0.25,
+              { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.07 },
+              0.15,
             )
-            .add(() => go(0, 0.01), 0.9);
+            .add(() => go(0, 0.01), 0.45);
           items.slice(1).forEach((_, index) => {
-            intro.add(() => go(index + 1), 2.2 + index * 1.6);
+            intro.add(() => go(index + 1), 1.2 + index * 0.9);
           });
         };
 
