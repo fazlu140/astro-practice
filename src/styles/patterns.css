@@ -232,7 +232,3 @@
     visibility: visible;
   }
 }
-
-.motion-line-mask {
-  overflow-clip-margin: 0.12em;
-}

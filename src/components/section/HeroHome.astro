@@ -240,8 +240,14 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
           .set(title, { autoAlpha: 1 }, 0.3)
           .fromTo(
             lines(title),
-            { yPercent: 125 },
-            { yPercent: 0, duration: 1, ease: "power4.out", stagger: 0.1 },
+            { autoAlpha: 0, yPercent: 60 },
+            {
+              autoAlpha: 1,
+              yPercent: 0,
+              duration: 1,
+              ease: "power3.out",
+              stagger: 0.12,
+            },
             0.3,
           )
           .fromTo(

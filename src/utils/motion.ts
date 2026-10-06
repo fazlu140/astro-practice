@@ -70,13 +70,12 @@ export const parts = (scope: Element) => [
   ...Array.from(scope.querySelectorAll<HTMLElement>("[data-motion]")),
 ];
 
-/** Split a heading into masked lines, reusing the split until the width changes. */
+/** Split a heading into lines, reusing the split until the width changes. */
 export function lines(element: HTMLElement) {
   let split = splits.get(element);
   if (!split) {
     split = SplitText.create(element, {
       type: "lines",
-      mask: "lines",
       linesClass: "motion-line",
     });
     splits.set(element, split);
@@ -101,8 +100,14 @@ export function reveal(scope: Element, { delay = 0, stagger = 0.06 } = {}) {
         .set(element, { autoAlpha: 1 }, at)
         .fromTo(
           lines(element),
-          { yPercent: 125 },
-          { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.09 },
+          { autoAlpha: 0, yPercent: 60 },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            stagger: 0.1,
+          },
           at,
         );
       return;
