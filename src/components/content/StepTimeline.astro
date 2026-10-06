@@ -33,6 +33,7 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
       {...rest}
     >
       <div class="step-timeline_track" data-motion aria-hidden="true">
+        <span class="step-timeline_line" />
         <span class="step-timeline_fill" />
         <span class="step-timeline_marker">
           <Icon src={mark} />
@@ -155,8 +156,9 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
               },
               0,
             )
+            .set(track, { autoAlpha: 1 }, 0.15)
             .fromTo(
-              [track, ...stops],
+              [...find(".step-timeline_line"), ...marker, ...stops],
               { autoAlpha: 0 },
               { autoAlpha: 1, duration: 0.6, stagger: 0.08 },
               0.15,
@@ -211,7 +213,6 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
       bottom: 0;
       left: 1rem;
       width: 0.25rem;
-      background-color: var(--border);
       border-radius: var(--radius-round);
       @media (width >= 48rem) {
         position: relative;
@@ -226,11 +227,16 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
       }
     }
 
+    .step-timeline_line,
     .step-timeline_fill {
       position: absolute;
       inset: 0;
-      background-color: var(--orange-300);
+      background-color: var(--border);
       border-radius: inherit;
+    }
+
+    .step-timeline_fill {
+      background-color: var(--orange-300);
     }
 
     .step-timeline_marker {
