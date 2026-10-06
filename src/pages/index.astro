@@ -13,6 +13,7 @@ import BentoGraphic from "@/components/content/BentoGraphic.astro";
 import MotionView from "@/components/utility/MotionView.astro";
 import StepTimeline from "@/components/content/StepTimeline.astro";
 import ProofGrid from "@/components/content/ProofGrid.astro";
+import IntegrationCard from "@/components/content/IntegrationCard.astro";
 import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
 import Button from "@/components/Button.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
@@ -255,6 +256,22 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
         />
       </Fragment>
     </ProofGrid>
+  </Section>
+
+  {/* Integrations */}
+  <Section containerClass="max-width-wide">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Discover All Connections</Heading>
+    </ContentWrapper>
+    <IntegrationCard
+      heading="One place to plan smarter, track better, and pay easier."
+      points={[
+        "Monitor service costs in real-time",
+        "Automate and schedule payments",
+        "Manage all vendors and integrations, seamlessly",
+      ]}
+      buttonText="Explore All Integrations"
+    />
   </Section>
   <MotionView />
 </Layout>

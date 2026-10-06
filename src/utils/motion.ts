@@ -30,6 +30,10 @@ const motions: Record<string, Motion> = {
     from: { autoAlpha: 0, scale: 0.4 },
     to: { autoAlpha: 1, scale: 1, duration: 0.6, ease: "back.out(2.2)" },
   },
+  swell: {
+    from: { autoAlpha: 0, scale: 0.86 },
+    to: { autoAlpha: 1, scale: 1, duration: 1.2, ease: "power3.out" },
+  },
   spin: {
     from: { autoAlpha: 0, scale: 0.3, rotation: -30 },
     to: {
