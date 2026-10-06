@@ -17,6 +17,12 @@ import IntegrationCard from "@/components/content/IntegrationCard.astro";
 import Accordion from "@/components/interactive/Accordion.astro";
 import AccordionItem from "@/components/interactive/AccordionItem.astro";
 import Paragraph from "@/components/typography/Paragraph.astro";
+import Grid from "@/components/wrapper/Grid.astro";
+import PostCard from "@/components/content/PostCard.astro";
+import postFeatured from "@/assets/blog/post-featured.png";
+import postTeam from "@/assets/blog/post-team.png";
+import postWorkshop from "@/assets/blog/post-workshop.png";
+import postMeeting from "@/assets/blog/post-meeting.png";
 import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
 import Button from "@/components/Button.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
@@ -314,6 +320,57 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
         </Paragraph>
       </AccordionItem>
     </Accordion>
+  </Section>
+
+  {/* Blog */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Featured in the Blog</Heading>
+    </ContentWrapper>
+    <Grid large={2} class="gap-4">
+      <PostCard
+        heading="From strategy to supplier without losing context"
+        text="Discover how workflow automation is transforming financial operations, boosting speed, accuracy, and compliance for modern institutions."
+        href="/blog"
+        image={postFeatured}
+        readTime="12 min read"
+        date={new Date("2024-10-24")}
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Grid class="gap-3">
+        <PostCard
+          variant="compact"
+          heading="Closing the books in half the time"
+          href="/blog"
+          image={postTeam}
+          readTime="8 min read"
+          date={new Date("2024-10-17")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+        <PostCard
+          variant="compact"
+          heading="What auditors look for in an approval trail"
+          href="/blog"
+          image={postWorkshop}
+          readTime="6 min read"
+          date={new Date("2024-10-09")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+        <PostCard
+          variant="compact"
+          heading="Five signs your payout process needs automation"
+          href="/blog"
+          image={postMeeting}
+          readTime="10 min read"
+          date={new Date("2024-09-30")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+      </Grid>
+    </Grid>
   </Section>
   <MotionView />
 </Layout>
