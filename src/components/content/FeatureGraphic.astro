@@ -1,5 +1,15 @@
 ---
 import type { HTMLAttributes } from "astro/types";
+import Icon from "@/components/media/Icon.astro";
+import Img from "@/components/media/Img.astro";
+import danger from "@/assets/graphics/hero/danger.svg";
+import policyApproved from "@/assets/graphics/features/policy-approved.svg";
+import policyBlocked from "@/assets/graphics/features/policy-blocked.svg";
+import policyPending from "@/assets/graphics/features/policy-pending.svg";
+import policyBlockedSmall from "@/assets/graphics/features/policy-blocked-small.svg";
+import avatarJohn from "@/assets/graphics/features/avatar-john.png";
+import avatarAarti from "@/assets/graphics/features/avatar-aarti.png";
+import avatarJohn2 from "@/assets/graphics/features/avatar-john-2.png";
 
 type Props = HTMLAttributes<"div"> & {
   /** Set to `false` to omit the component. */
@@ -9,6 +19,33 @@ type Props = HTMLAttributes<"div"> & {
 };
 
 const { render = true, variant, class: className, ...rest } = Astro.props;
+
+const policies = [
+  {
+    icon: policyApproved,
+    avatar: avatarJohn,
+    name: "John Doe",
+    accounts: "1 linked account",
+    tone: "completed",
+    status: "Completed",
+  },
+  {
+    icon: policyBlocked,
+    avatar: avatarAarti,
+    name: "Aarti Shukla",
+    accounts: "3 linked accounts",
+    tone: "blocked",
+    status: "Blocked",
+  },
+  {
+    icon: policyPending,
+    avatar: avatarJohn2,
+    name: "John Doe",
+    accounts: "1 linked account",
+    tone: "processing",
+    status: "Processing",
+  },
+];
 ---
 
 {
@@ -18,7 +55,81 @@ const { render = true, variant, class: className, ...rest } = Astro.props;
       aria-hidden="true"
       {...rest}
     >
-      <div class="feature-graphic_board" />
+      <div class="feature-graphic_board">
+        {variant === "policy" && (
+          <>
+            <div class="feature-graphic_thread" />
+            <div class="feature-graphic_stack">
+              {policies.map((policy) => (
+                <div class="feature-graphic_card">
+                  <div class="feature-graphic_entry">
+                    <div class:list={["feature-graphic_tile", policy.tone]}>
+                      <Icon src={policy.icon} />
+                    </div>
+                    <div class="feature-graphic_body">
+                      <div class="feature-graphic_line between">
+                        <span class="feature-graphic_person">
+                          <Img
+                            class="feature-graphic_avatar"
+                            src={policy.avatar}
+                            variant="densities"
+                            width={15}
+                            height={15}
+                          />
+                          {policy.name}
+                        </span>
+                        <span
+                          class="feature-graphic_bar faint"
+                          style="--_w: 48"
+                        />
+                      </div>
+                      <span class="feature-graphic_bar" style="--_w: 131" />
+                      <div class="feature-graphic_line between">
+                        <span class="feature-graphic_line">
+                          <span class="feature-graphic_pill">
+                            {policy.tone === "blocked" && (
+                              <Icon
+                                class="feature-graphic_danger"
+                                src={danger}
+                              />
+                            )}
+                            {policy.accounts}
+                          </span>
+                          <span class="feature-graphic_pill id">747498</span>
+                        </span>
+                        <span class:list={["feature-graphic_pill", policy.tone]}>
+                          {policy.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div class="feature-graphic_entry feature-graphic_next">
+              <div class="feature-graphic_tile small blocked">
+                <Icon src={policyBlockedSmall} />
+              </div>
+              <div class="feature-graphic_body">
+                <div class="feature-graphic_line between">
+                  <span class="feature-graphic_person">
+                    <Img
+                      class="feature-graphic_avatar"
+                      src={avatarAarti}
+                      variant="densities"
+                      width={15}
+                      height={15}
+                    />
+                    Aarti Shukla
+                  </span>
+                  <span class="feature-graphic_bar faint" style="--_w: 48" />
+                </div>
+                <span class="feature-graphic_bar" style="--_w: 131" />
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -35,6 +146,15 @@ const { render = true, variant, class: className, ...rest } = Astro.props;
       width: 100%;
       max-width: 25.875rem;
       aspect-ratio: 414 / 371;
+      & .completed {
+        --_tone: var(--_completed);
+      }
+      & .blocked {
+        --_tone: var(--_blocked);
+      }
+      & .processing {
+        --_tone: var(--_processing);
+      }
     }
 
     .feature-graphic_board {
@@ -49,13 +169,169 @@ const { render = true, variant, class: className, ...rest } = Astro.props;
       font-weight: var(--primary-medium);
       line-height: 1.2;
       letter-spacing: -0.01em;
+      &::before,
       &::after {
-        content: "";
         position: absolute;
+        z-index: 1;
         inset: auto 0 0;
         height: calc(var(--_u) * 64);
         background-image: linear-gradient(transparent, var(--orange-50));
       }
+      &::after {
+        content: "";
+      }
+      .policy &::before {
+        content: "";
+        inset: 0 0 auto;
+        background-image: linear-gradient(var(--orange-100), transparent);
+      }
+    }
+
+    /* Shared parts */
+    .feature-graphic_card {
+      padding: calc(var(--_u) * 12);
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 12);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 4) var(--white),
+        0 calc(var(--_u) * 3) calc(var(--_u) * 6)
+          color-mix(in lab, var(--neutral-200) 60%, transparent),
+        0 calc(var(--_u) * 12) calc(var(--_u) * 24)
+          color-mix(in lab, var(--neutral-600) 14%, transparent),
+        0 calc(var(--_u) * 18) calc(var(--_u) * 36)
+          color-mix(in lab, var(--neutral-700) 10%, transparent);
+    }
+
+    .feature-graphic_entry {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 12);
+    }
+
+    .feature-graphic_body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 7.5);
+      min-width: 0;
+    }
+
+    .feature-graphic_line {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 4);
+      &.between {
+        justify-content: space-between;
+      }
+    }
+
+    .feature-graphic_tile {
+      --_tone: var(--orange-500);
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 56);
+      height: calc(var(--_u) * 56);
+      background-color: color-mix(in lab, var(--_tone) 8%, var(--white));
+      border: var(--border-width) solid
+        color-mix(in lab, var(--_tone) 12%, var(--white));
+      border-radius: calc(var(--_u) * 8);
+      & .icon {
+        --_size: calc(var(--_u) * 33);
+      }
+      &.small {
+        width: calc(var(--_u) * 32);
+        height: calc(var(--_u) * 32);
+        border-radius: calc(var(--_u) * 6);
+        & .icon {
+          --_size: calc(var(--_u) * 19);
+        }
+      }
+    }
+
+    .feature-graphic_person {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 4);
+      color: var(--neutral-800);
+    }
+
+    .feature-graphic_avatar {
+      width: calc(var(--_u) * 14.4);
+      height: calc(var(--_u) * 14.4);
+      border-radius: 50%;
+    }
+
+    .feature-graphic_bar {
+      flex: none;
+      display: block;
+      width: calc(var(--_u) * var(--_w));
+      max-width: 100%;
+      height: calc(var(--_u) * 6);
+      background-color: var(--neutral-200);
+      border-radius: var(--radius-round);
+      &.faint {
+        opacity: 0.5;
+      }
+    }
+
+    .feature-graphic_pill {
+      --_tone: var(--neutral-900);
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 3.8);
+      min-height: calc(var(--_u) * 17);
+      padding-inline: calc(var(--_u) * 7.5);
+      background-color: var(--white);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-round);
+      color: var(--_tone);
+      font-size: calc(var(--_u) * 8);
+      white-space: nowrap;
+      &.id {
+        background-color: var(--neutral-100);
+      }
+      &:is(.completed, .blocked, .processing) {
+        background-image: linear-gradient(
+          transparent 24%,
+          color-mix(in lab, var(--_tone) 14%, transparent)
+        );
+        border-color: color-mix(in lab, var(--_tone) 28%, transparent);
+      }
+    }
+
+    .feature-graphic_danger.icon {
+      --_size: calc(var(--_u) * 9);
+      aspect-ratio: auto;
+    }
+
+    /* Policy */
+    .feature-graphic_thread {
+      position: absolute;
+      top: calc(var(--_u) * 104);
+      bottom: 0;
+      left: calc(var(--_u) * 86.5);
+      width: calc(var(--_u) * 2);
+      background-color: var(--neutral-200);
+    }
+
+    .feature-graphic_stack {
+      position: absolute;
+      top: calc(var(--_u) * 44.5);
+      left: calc(var(--_u) * 49.5);
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 10);
+      width: calc(var(--_u) * 317);
+    }
+
+    .feature-graphic_next {
+      position: absolute;
+      top: calc(var(--_u) * 331);
+      left: calc(var(--_u) * 71.5);
+      width: calc(var(--_u) * 279);
+      opacity: 0.6;
     }
   }
 </style>
