@@ -22,6 +22,7 @@ import card3 from "@/assets/graphics/features/card-3.svg";
 import chevron from "@/assets/graphics/features/chevron.svg";
 import checkbox from "@/assets/graphics/features/checkbox.svg";
 import shield from "@/assets/graphics/features/shield.svg";
+import pieChart from "@/assets/graphics/features/pie-chart.svg";
 
 type Props = HTMLAttributes<"div"> & {
   /** Set to `false` to omit the component. */
@@ -79,6 +80,8 @@ const fields = [
   { value: "United States", select: true },
   { value: "12345" },
 ];
+
+const chart = [74, 106, 57, 34, 70, 106, 77, 54, 39, 12, 63];
 ---
 
 {
@@ -260,6 +263,66 @@ const fields = [
               height={78}
               transparent
             />
+          </>
+        )}
+        {variant === "compliance" && (
+          <>
+            <div class="feature-graphic_notice">
+              <Icon class="feature-graphic_check" src={notice} />
+              Products launched only in the approved locations
+            </div>
+            <div class="feature-graphic_card feature-graphic_sheet">
+              <div class="feature-graphic_entry">
+                <div class="feature-graphic_tile">
+                  <Icon src={pieChart} />
+                </div>
+                <div class="feature-graphic_body">
+                  <div class="feature-graphic_line between">
+                    <span class="feature-graphic_line">
+                      <strong>Comparative Analysis</strong>
+                      <span class="feature-graphic_pill">Vendor</span>
+                    </span>
+                    <span class="feature-graphic_bar faint" style="--_w: 48" />
+                  </div>
+                  <span class="feature-graphic_bar" style="--_w: 171" />
+                  <span class="feature-graphic_bar" style="--_w: 93" />
+                </div>
+              </div>
+              <div class="feature-graphic_rule" />
+              <div class="feature-graphic_line between">
+                <span class="feature-graphic_line">
+                  <strong>Launch - Fall Season 2025</strong>
+                  <span class="feature-graphic_pill">March 2025</span>
+                </span>
+                <span class="feature-graphic_bar faint" style="--_w: 48" />
+              </div>
+              <div class="feature-graphic_chart">
+                <div class="feature-graphic_columns">
+                  {chart.map((height, index) => (
+                    <span
+                      class:list={[index === 1 && "peak"]}
+                      style={`--_h: ${height}`}
+                    />
+                  ))}
+                </div>
+                <div class="feature-graphic_body">
+                  <span class="feature-graphic_line">
+                    <span class="feature-graphic_key" />
+                    <span class="feature-graphic_bar thin" style="--_w: 23" />
+                  </span>
+                  <span class="feature-graphic_line">
+                    <span class="feature-graphic_key faint" />
+                    <span class="feature-graphic_bar thin" style="--_w: 23" />
+                  </span>
+                  <span class="feature-graphic_caption">Analysis</span>
+                  <span class="feature-graphic_bar faint" style="--_w: 48" />
+                  <span class="feature-graphic_bar" style="--_w: 83" />
+                  <span class="feature-graphic_bar" style="--_w: 45" />
+                  <span class="feature-graphic_bar faint" style="--_w: 31" />
+                  <span class="feature-graphic_pill">Learn More</span>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>
@@ -668,6 +731,105 @@ const fields = [
       left: calc(var(--_u) * 309.3);
       width: calc(var(--_u) * 66.6);
       height: auto;
+    }
+
+    /* Compliance */
+    .compliance .feature-graphic_notice {
+      top: calc(var(--_u) * 47);
+    }
+
+    .compliance .feature-graphic_sheet {
+      top: calc(var(--_u) * 85);
+      left: calc(var(--_u) * 35);
+      width: calc(var(--_u) * 341);
+      height: calc(var(--_u) * 291);
+      border-radius: calc(var(--_u) * 16);
+      & strong {
+        color: var(--neutral-1000);
+      }
+    }
+
+    .compliance .feature-graphic_tile {
+      width: calc(var(--_u) * 62);
+      height: calc(var(--_u) * 62);
+      & .icon {
+        --_size: calc(var(--_u) * 38);
+      }
+    }
+
+    .feature-graphic_rule {
+      flex: none;
+      height: var(--border-width);
+      background-color: var(--border);
+    }
+
+    .feature-graphic_chart {
+      flex: none;
+      display: flex;
+      gap: calc(var(--_u) * 15.6);
+      height: calc(var(--_u) * 135);
+      padding: calc(var(--_u) * 10.4) calc(var(--_u) * 13)
+        calc(var(--_u) * 18.2) calc(var(--_u) * 18.2);
+      overflow: clip;
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--border);
+      border-radius: calc(var(--_u) * 6.5);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 3.25) var(--white),
+        0 calc(var(--_u) * 4) calc(var(--_u) * 8)
+          color-mix(in lab, var(--neutral-200) 32%, transparent);
+      & .feature-graphic_body {
+        align-items: flex-start;
+        gap: calc(var(--_u) * 5);
+        color: var(--neutral-800);
+        font-size: calc(var(--_u) * 10);
+      }
+    }
+
+    .feature-graphic_columns {
+      flex: none;
+      display: flex;
+      align-items: flex-end;
+      gap: calc(var(--_u) * 5);
+      height: calc(var(--_u) * 97);
+      & span {
+        position: relative;
+        width: calc(var(--_u) * 13);
+        height: calc(var(--_h) / 106 * 100%);
+        background-color: color-mix(in lab, var(--orange-500) 16%, transparent);
+        border-radius: calc(var(--_u) * 1.3);
+        &.peak {
+          background-color: var(--orange-500);
+        }
+        &::after {
+          content: "";
+          position: absolute;
+          top: calc(100% + var(--_u) * 6);
+          right: 0;
+          left: 0;
+          height: calc(var(--_u) * 2.6);
+          background-color: var(--neutral-200);
+          border-radius: var(--radius-round);
+        }
+      }
+    }
+
+    .feature-graphic_key {
+      width: calc(var(--_u) * 7.8);
+      height: calc(var(--_u) * 2.6);
+      background-color: var(--orange-500);
+      border-radius: var(--radius-round);
+      &.faint {
+        opacity: 0.25;
+      }
+    }
+
+    .feature-graphic_bar.thin {
+      height: calc(var(--_u) * 2.6);
+    }
+
+    .feature-graphic_caption {
+      margin-block: calc(var(--_u) * 4) calc(var(--_u) * 2);
     }
 
     /* Policy */
