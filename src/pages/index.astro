@@ -12,6 +12,9 @@ import BentoGrid from "@/components/content/BentoGrid.astro";
 import BentoGraphic from "@/components/content/BentoGraphic.astro";
 import MotionView from "@/components/utility/MotionView.astro";
 import StepTimeline from "@/components/content/StepTimeline.astro";
+import ProofGrid from "@/components/content/ProofGrid.astro";
+import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
+import Button from "@/components/Button.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
 import clock from "@/assets/graphics/features/icon-clock.svg";
 import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg";
@@ -177,6 +180,81 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
         },
       ]}
     />
+  </Section>
+
+  {/* Proof */}
+  <Section class="background-2">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        <strong>Proven financial workflow</strong> across every platform
+      </Heading>
+      <ButtonWrapper data-motion="pop">
+        <Button element="link" href="/contact">Book a Consultation</Button>
+      </ButtonWrapper>
+    </ContentWrapper>
+    <ProofGrid>
+      <Card
+        variant="quote"
+        text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+        cite="– Annia Mirza, Co-founder, Crestline Finance"
+        buttonLabel="Read Case Study"
+        buttonHref="/case-studies"
+        accent
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Card
+        variant="stat"
+        value="80%"
+        heading="Reduction in QA costs"
+        text="in 3 months"
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Fragment slot="column2">
+        <Card
+          variant="stat"
+          value="30%"
+          heading="Reduction in QA costs"
+          text="in 3 months"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+        <Card
+          variant="quote"
+          text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+          cite="– Annia Mirza, Co-founder, Crestline Finance"
+          buttonLabel="Read Case Study"
+          buttonHref="/case-studies"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+      </Fragment>
+      <Fragment slot="column3">
+        <Card
+          variant="quote"
+          text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+          cite="– Annia Mirza, Co-founder, Crestline Finance"
+          buttonLabel="Read Case Study"
+          buttonHref="/case-studies"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+        <Card
+          variant="stat"
+          value="25%"
+          heading="Reduction in QA costs"
+          text="in 3 months"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+      </Fragment>
+    </ProofGrid>
   </Section>
   <MotionView />
 </Layout>

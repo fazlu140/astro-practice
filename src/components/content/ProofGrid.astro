@@ -1,0 +1,120 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+};
+
+const { render = true, class: className, ...rest } = Astro.props;
+
+const columns = [
+  await slotContent(Astro.slots),
+  await slotContent(Astro.slots, "column2"),
+  await slotContent(Astro.slots, "column3"),
+].filter(Boolean);
+---
+
+{
+  render && columns.length > 0 && (
+    <div class:list={["proof-grid_wrap", className]} {...rest}>
+      {columns.map((column) => (
+        <div class="proof-grid_column">
+          <Fragment set:html={column} />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll<HTMLElement>(".proof-grid_wrap").forEach((wrap) => {
+    wrap.querySelectorAll<HTMLElement>(".card_wrap").forEach((card) => {
+      card.addEventListener("pointermove", (event) => {
+        const box = card.getBoundingClientRect();
+        card.style.setProperty("--_x", `${event.clientX - box.left}px`);
+        card.style.setProperty("--_y", `${event.clientY - box.top}px`);
+      });
+    });
+
+    const media = gsap.matchMedia();
+
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      wrap.querySelectorAll<HTMLElement>(".card_value").forEach((figure) => {
+        const [, digits = "", suffix = ""] =
+          figure.textContent?.trim().match(/^(\d+)(.*)$/) ?? [];
+        if (!digits) return;
+        const count = { value: 0 };
+        figure.textContent = `0${suffix}`;
+        gsap.to(count, {
+          value: Number(digits),
+          duration: 1.6,
+          ease: "power2.out",
+          scrollTrigger: { trigger: figure, start: "top 85%", once: true },
+          onUpdate: () => {
+            figure.textContent = `${Math.round(count.value)}${suffix}`;
+          },
+        });
+      });
+    });
+
+    media.add(
+      "(prefers-reduced-motion: no-preference) and (min-width: 64rem)",
+      () => {
+        const columns = wrap.querySelectorAll(".proof-grid_column");
+        columns.forEach((column, index) => {
+          const shift = index % 2 ? 28 : -28;
+          gsap.fromTo(
+            column,
+            { y: -shift },
+            {
+              y: shift,
+              ease: "none",
+              scrollTrigger: {
+                trigger: wrap,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            },
+          );
+        });
+      },
+    );
+  });
+</script>
+
+<style is:global>
+  @layer components {
+    .proof-grid_wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-4);
+      width: 100%;
+      @media (width >= 48rem) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @media (width >= 64rem) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .proof-grid_column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      @media (48rem <= width < 64rem) {
+        &:nth-child(3) {
+          grid-column: 1 / -1;
+          flex-direction: row;
+        }
+      }
+    }
+  }
+</style>
