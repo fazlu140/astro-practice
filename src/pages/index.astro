@@ -14,6 +14,9 @@ import MotionView from "@/components/utility/MotionView.astro";
 import StepTimeline from "@/components/content/StepTimeline.astro";
 import ProofGrid from "@/components/content/ProofGrid.astro";
 import IntegrationCard from "@/components/content/IntegrationCard.astro";
+import Accordion from "@/components/interactive/Accordion.astro";
+import AccordionItem from "@/components/interactive/AccordionItem.astro";
+import Paragraph from "@/components/typography/Paragraph.astro";
 import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
 import Button from "@/components/Button.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
@@ -272,6 +275,45 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
       ]}
       buttonText="Explore All Integrations"
     />
+  </Section>
+
+  {/* FAQ */}
+  <Section containerClass="max-width-small" gap="7">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Frequently Asked Questions</Heading>
+    </ContentWrapper>
+    <Accordion openFirst data-motion-scope="view">
+      <AccordionItem heading="What is Acerna and how does it help my business?" variant="card" data-motion="rise">
+        <Paragraph>
+          Acerna is a financial workflow management platform that simplifies how teams handle budgets, approvals, and expense tracking. It brings finance, operations, and management together in one seamless system—saving time, reducing manual errors, and improving transparency across teams.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Who is Acerna designed for?" variant="card" data-motion="rise">
+        <Paragraph>
+          Acerna is built for finance and operations teams at growing companies that have outgrown spreadsheets and email approvals. It suits anyone who needs clear control over spending without slowing their team down.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Can Acerna integrate with our existing tools and systems?" variant="card" data-motion="rise">
+        <Paragraph>
+          Yes. Acerna connects with common accounting, banking, and payment tools, so your data stays in sync and your team keeps working in the systems they already know.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="How long does it take to get started?" variant="card" data-motion="rise">
+        <Paragraph>
+          Most teams connect their tools and map a first workflow on day one, and are running routine approvals automatically within four weeks.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="How does Acerna keep our financial data secure?" variant="card" data-motion="rise">
+        <Paragraph>
+          Every action is checked against your policies and recorded in an audit trail. Access is limited by role, so people only see and approve what they are responsible for.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Can we change our approval workflows later?" variant="card" data-motion="rise">
+        <Paragraph>
+          Yes. Workflows are yours to edit at any time. Update a rule once and it applies to every new transaction from that point on.
+        </Paragraph>
+      </AccordionItem>
+    </Accordion>
   </Section>
   <MotionView />
 </Layout>
