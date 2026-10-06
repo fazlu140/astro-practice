@@ -6,6 +6,11 @@ import Heading from "@/components/typography/Heading.astro";
 import HeroHome from "@/components/section/HeroHome.astro";
 import FeatureRow from "@/components/content/FeatureRow.astro";
 import FeatureGraphic from "@/components/content/FeatureGraphic.astro";
+import Section from "@/components/wrapper/Section.astro";
+import Card from "@/components/item/Card.astro";
+import BentoGrid from "@/components/content/BentoGrid.astro";
+import BentoGraphic from "@/components/content/BentoGraphic.astro";
+import MotionView from "@/components/utility/MotionView.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
 import clock from "@/assets/graphics/features/icon-clock.svg";
 import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg";
@@ -63,4 +68,66 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
       <FeatureGraphic variant="compliance" />
     </FeatureRow>
   </FeatureSteps>
+
+  {/* Bento */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        Where <strong>financial compliance</strong> meets workflow confidence.
+      </Heading>
+    </ContentWrapper>
+    <BentoGrid>
+      <Card
+        variant="graphic"
+        heading="Access &amp; Payouts"
+        text="Automate, track, reconcile — from one smart dashboard."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="access" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Workflow Process Automation"
+        text="Reduce approvals by 80% as AI handles routine tasks."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="workflow" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Launch Compliance"
+        text="Approved markets, only."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="launch" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Anxiety-free Growth"
+        text="Get live compliance insights."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="growth" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Unified System"
+        text="Workflows, payments, unified."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="unified" />
+      </Card>
+    </BentoGrid>
+  </Section>
+  <MotionView />
 </Layout>
