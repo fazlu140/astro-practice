@@ -1,0 +1,249 @@
+---
+import type { ComponentProps } from "astro/types";
+import Section from "@/components/wrapper/Section.astro";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = Omit<
+  ComponentProps<typeof Section>,
+  | "theme"
+  | "paddingTop"
+  | "paddingBottom"
+  | "gap"
+  | "align"
+  | "fullHeight"
+  | "containerClass"
+  | "containerAttrs"
+>;
+
+const { render = true, class: className, ...rest } = Astro.props;
+
+const intro = await slotContent(Astro.slots, "intro");
+const steps = await slotContent(Astro.slots);
+const count = (steps?.match(/feature-row_wrap/g) ?? []).length;
+const label = (step: number) => String(step).padStart(2, "0");
+---
+
+{
+  render && steps && (
+    <Section
+      class={["feature-steps_wrap", className].filter(Boolean).join(" ")}
+      {...rest}
+    >
+      <Fragment set:html={intro} />
+      <div class="feature-steps_track" style={`--_count: ${count}`}>
+        <div class="feature-steps_pin">
+          <div class="feature-steps_list">
+            <Fragment set:html={steps} />
+          </div>
+          <div class="feature-steps_progress" aria-hidden="true">
+            <span class="feature-steps_count">
+              <span class="feature-steps_digits">
+                {Array.from({ length: count }, (_, index) => (
+                  <span>{label(index + 1)}</span>
+                ))}
+              </span>
+            </span>
+            <span class="feature-steps_rail" />
+            <span>{label(count)}</span>
+          </div>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
+<style is:global>
+  @layer components {
+    /* Stacked */
+    .feature-steps_track {
+      width: 100%;
+    }
+
+    .feature-steps_list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    .feature-steps_progress {
+      display: none;
+    }
+
+    /* Pinned */
+    .feature-steps_wrap {
+      @media (width >= 64rem) and (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+          & .feature-steps_track {
+            --_height: calc(25.875rem * 371 / 414);
+            --_step: calc(100% / var(--_count));
+            height: calc(var(--_height) + var(--_count) * 70svh);
+            view-timeline: --feature-steps block;
+          }
+
+          & .feature-steps_pin {
+            position: sticky;
+            top: calc((100svh - var(--_height) + var(--nav-height)) / 2);
+          }
+
+          & .feature-steps_list {
+            display: grid;
+            & > * {
+              --_i: 0;
+              --_part-timeline: --feature-steps;
+              --_part-edge: contain;
+              --_part-base: calc(var(--_i) * var(--_step) - 1%);
+              --_part-gap: 0.4%;
+              --_part-span: 5%;
+              grid-area: 1 / 1;
+            }
+            & > :nth-child(2) {
+              --_i: 1;
+            }
+            & > :nth-child(3) {
+              --_i: 2;
+            }
+            & > :nth-child(4) {
+              --_i: 3;
+            }
+            & > :nth-child(5) {
+              --_i: 4;
+            }
+            & > :nth-child(6) {
+              --_i: 5;
+            }
+            & > :first-child {
+              --_part-edge: entry;
+              --_part-base: 45%;
+              --_part-gap: 3%;
+              --_part-span: 30%;
+            }
+            & > * > * {
+              animation: feature-steps-through linear both;
+              animation-timeline: --feature-steps;
+              animation-range: contain calc(var(--_i) * var(--_step)) contain
+                calc((var(--_i) + 1) * var(--_step) + 2%);
+            }
+            & > * > :first-child {
+              --_out-y: -2rem;
+            }
+            & > * > :last-child {
+              --_out-scale: 0.96;
+            }
+            & > :first-child > * {
+              animation-name: feature-steps-out;
+            }
+            & > :last-child > * {
+              animation-name: feature-steps-in;
+            }
+          }
+
+          & .feature-steps_progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-2);
+            font-size: var(--text-small);
+            font-variant-numeric: tabular-nums;
+            line-height: 1.45;
+          }
+
+          & .feature-steps_count {
+            height: 1.45em;
+            overflow: clip;
+            color: var(--text);
+            font-weight: var(--primary-bold);
+          }
+
+          & .feature-steps_digits {
+            display: flex;
+            flex-direction: column;
+            animation: feature-steps-count steps(var(--_count), jump-none) both;
+            animation-timeline: --feature-steps;
+            animation-range: contain 0% contain 100%;
+          }
+
+          & .feature-steps_rail {
+            width: 6rem;
+            height: var(--border-width);
+            overflow: clip;
+            background-color: var(--border);
+            &::after {
+              content: "";
+              display: block;
+              height: 100%;
+              background-color: var(--orange-700);
+              transform-origin: left;
+              animation: feature-steps-fill linear both;
+              animation-timeline: --feature-steps;
+              animation-range: contain 0% contain 100%;
+            }
+          }
+        }
+      }
+    }
+
+    @keyframes feature-steps-through {
+      0% {
+        opacity: 0;
+        visibility: hidden;
+      }
+      8% {
+        opacity: 1;
+        visibility: visible;
+      }
+      86% {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+        visibility: visible;
+      }
+      100% {
+        opacity: 0;
+        translate: 0 var(--_out-y, 0);
+        scale: var(--_out-scale, 1);
+        visibility: hidden;
+      }
+    }
+
+    @keyframes feature-steps-out {
+      86% {
+        opacity: 1;
+        translate: 0 0;
+        scale: 1;
+        visibility: visible;
+      }
+      100% {
+        opacity: 0;
+        translate: 0 var(--_out-y, 0);
+        scale: var(--_out-scale, 1);
+        visibility: hidden;
+      }
+    }
+
+    @keyframes feature-steps-in {
+      0% {
+        opacity: 0;
+        visibility: hidden;
+      }
+      8% {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    @keyframes feature-steps-count {
+      to {
+        translate: 0 calc((1 - var(--_count)) / var(--_count) * 100%);
+      }
+    }
+
+    @keyframes feature-steps-fill {
+      from {
+        scale: 0 1;
+      }
+    }
+  }
+</style>

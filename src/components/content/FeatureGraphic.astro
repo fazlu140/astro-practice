@@ -227,8 +227,11 @@ const chart = [74, 106, 57, 34, 70, 106, 77, 54, 39, 12, 63];
               </span>
               <div class="feature-graphic_box">
                 <div class="feature-graphic_fields">
-                  {fields.map((field) => (
-                    <div class:list={["feature-graphic_field", field.cards && "wide"]}>
+                  {fields.map((field, index) => (
+                    <div
+                      class:list={["feature-graphic_field", field.cards && "wide"]}
+                      style={`--_p: ${index + 2}`}
+                    >
                       <span class="feature-graphic_bar" style="--_w: 64" />
                       <span class="feature-graphic_input">
                         {field.value}
@@ -301,7 +304,7 @@ const chart = [74, 106, 57, 34, 70, 106, 77, 54, 39, 12, 63];
                   {chart.map((height, index) => (
                     <span
                       class:list={[index === 1 && "peak"]}
-                      style={`--_h: ${height}`}
+                      style={`--_h: ${height}; --_p: ${index + 4}`}
                     />
                   ))}
                 </div>
@@ -830,6 +833,181 @@ const chart = [74, 106, 57, 34, 70, 106, 77, 54, 39, 12, 63];
 
     .feature-graphic_caption {
       margin-block: calc(var(--_u) * 4) calc(var(--_u) * 2);
+    }
+
+    /* Motion */
+    .feature-graphic_wrap {
+      @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+          &
+            :where(
+              .feature-graphic_thread,
+              .feature-graphic_stack > *,
+              .feature-graphic_next,
+              .feature-graphic_tile,
+              .feature-graphic_pill:is(.completed, .blocked, .processing),
+              .feature-graphic_notice,
+              .feature-graphic_sheet,
+              .feature-graphic_product,
+              .feature-graphic_totals > *,
+              .feature-graphic_total,
+              .feature-graphic_field,
+              .feature-graphic_terms,
+              .feature-graphic_action,
+              .feature-graphic_shield,
+              .feature-graphic_chart,
+              .feature-graphic_columns > *
+            ) {
+            --_q: 0;
+            --_o: 0;
+            --_x: 0;
+            --_y: 0;
+            --_sx: 1;
+            --_sy: 1;
+            --_r: 0deg;
+            animation: feature-graphic-in linear both;
+            animation-timeline: var(--_part-timeline, view());
+            animation-range: var(--_part-edge, cover)
+              calc(
+                var(--_part-base, 8%) + (var(--_p, 0) + var(--_q)) *
+                  var(--_part-gap, 1%)
+              )
+              var(--_part-edge, cover)
+              calc(
+                var(--_part-base, 8%) + var(--_part-span, 20%) +
+                  (var(--_p, 0) + var(--_q)) * var(--_part-gap, 1%)
+              );
+          }
+
+          & .feature-graphic_thread {
+            --_o: 1;
+            --_sy: 0;
+            transform-origin: top;
+          }
+          & .feature-graphic_stack > * {
+            --_p: 1;
+            --_x: calc(var(--_u) * 28);
+            &:nth-child(2) {
+              --_p: 3;
+            }
+            &:nth-child(3) {
+              --_p: 5;
+            }
+          }
+          & .feature-graphic_next {
+            --_p: 7;
+            --_y: calc(var(--_u) * 12);
+          }
+          & .feature-graphic_tile {
+            --_q: 1;
+            --_sx: 0.4;
+            --_sy: 0.4;
+          }
+          & .feature-graphic_pill:is(.completed, .blocked, .processing) {
+            --_q: 2;
+            --_sx: 0.6;
+            --_sy: 0.6;
+          }
+          & .feature-graphic_notice {
+            --_x: -50%;
+            --_y: calc(var(--_u) * -16);
+          }
+          & .feature-graphic_sheet {
+            --_p: 1;
+            --_y: calc(var(--_u) * 24);
+          }
+          & .feature-graphic_product {
+            --_p: 2;
+            --_x: calc(var(--_u) * -16);
+            &:nth-child(2) {
+              --_p: 3;
+            }
+          }
+          & .feature-graphic_totals > * {
+            --_p: 4;
+            --_y: calc(var(--_u) * 8);
+            &:nth-child(2) {
+              --_p: 5;
+            }
+            &:nth-child(3) {
+              --_p: 6;
+            }
+          }
+          & .feature-graphic_total {
+            --_p: 7;
+            --_sx: 0.92;
+            --_sy: 0.92;
+          }
+          & .feature-graphic_field {
+            --_y: calc(var(--_u) * -10);
+          }
+          & .feature-graphic_terms {
+            --_p: 9;
+            --_y: calc(var(--_u) * 8);
+          }
+          & .feature-graphic_action {
+            --_p: 10;
+            --_sy: 0.6;
+          }
+          & .feature-graphic_shield {
+            --_p: 4;
+            --_sx: 0.3;
+            --_sy: 0.3;
+            --_r: -30deg;
+          }
+          & .feature-graphic_chart {
+            --_p: 3;
+            --_y: calc(var(--_u) * 12);
+          }
+          & .feature-graphic_columns > * {
+            --_o: 1;
+            --_sy: 0;
+            transform-origin: bottom;
+          }
+        }
+      }
+    }
+
+    @keyframes feature-graphic-in {
+      from {
+        opacity: var(--_o);
+        translate: var(--_x) var(--_y);
+        scale: var(--_sx) var(--_sy);
+        rotate: var(--_r);
+      }
+    }
+
+    /* Hover */
+    .feature-graphic_card,
+    .feature-graphic_notice,
+    .feature-graphic_shield,
+    .feature-graphic_tile .icon {
+      transition: transform 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .feature-graphic_wrap {
+      @media (hover: hover) {
+        &:hover {
+          & .feature-graphic_stack > :nth-child(odd) {
+            transform: translateX(calc(var(--_u) * -6));
+          }
+          & .feature-graphic_stack > :nth-child(even) {
+            transform: translateX(calc(var(--_u) * 6));
+          }
+          & .feature-graphic_sheet {
+            transform: translateY(calc(var(--_u) * -6));
+          }
+          & .feature-graphic_notice {
+            transform: translateY(calc(var(--_u) * -3));
+          }
+          & .feature-graphic_shield {
+            transform: rotate(8deg) scale(1.1);
+          }
+          & .feature-graphic_tile .icon {
+            transform: scale(1.12) rotate(-6deg);
+          }
+        }
+      }
     }
 
     /* Policy */

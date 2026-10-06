@@ -93,5 +93,39 @@ const visual = await slotContent(Astro.slots);
     .feature-row_text {
       color: var(--text-2);
     }
+
+    /* Motion */
+    .feature-row_wrap > :first-child > * {
+      @media (prefers-reduced-motion: no-preference) {
+        @supports (animation-timeline: view()) {
+          --_p: 0;
+          animation: feature-row-rise linear both;
+          animation-timeline: var(--_part-timeline, view());
+          animation-range: var(--_part-edge, cover)
+            calc(var(--_part-base, 6%) + var(--_p) * var(--_part-gap, 1%))
+            var(--_part-edge, cover)
+            calc(
+              var(--_part-base, 6%) + var(--_part-span, 18%) + var(--_p) *
+                var(--_part-gap, 1%)
+            );
+          &:nth-child(2) {
+            --_p: 3;
+          }
+          &:nth-child(3) {
+            --_p: 6;
+          }
+          &:nth-child(4) {
+            --_p: 9;
+          }
+        }
+      }
+    }
+
+    @keyframes feature-row-rise {
+      from {
+        opacity: 0;
+        translate: 0 2rem;
+      }
+    }
   }
 </style>

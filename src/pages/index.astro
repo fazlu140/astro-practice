@@ -1,6 +1,6 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
-import Section from "@/components/wrapper/Section.astro";
+import FeatureSteps from "@/components/section/FeatureSteps.astro";
 import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
 import Heading from "@/components/typography/Heading.astro";
 import HeroHome from "@/components/section/HeroHome.astro";
@@ -19,8 +19,8 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
   />
 
   {/* Features */}
-  <Section>
-    <ContentWrapper centered>
+  <FeatureSteps>
+    <ContentWrapper slot="intro" centered>
       <Heading class="heading-accent" variant="h3" maxWidth={30}>
         <strong>Financial workflow controls</strong> that always run on autopilot.
       </Heading>
@@ -57,5 +57,5 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
     >
       <FeatureGraphic variant="compliance" />
     </FeatureRow>
-  </Section>
+  </FeatureSteps>
 </Layout>
