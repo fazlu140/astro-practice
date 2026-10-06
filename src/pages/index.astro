@@ -11,6 +11,7 @@ import Card from "@/components/item/Card.astro";
 import BentoGrid from "@/components/content/BentoGrid.astro";
 import BentoGraphic from "@/components/content/BentoGraphic.astro";
 import MotionView from "@/components/utility/MotionView.astro";
+import StepTimeline from "@/components/content/StepTimeline.astro";
 import fileText from "@/assets/graphics/features/icon-file-text.svg";
 import clock from "@/assets/graphics/features/icon-clock.svg";
 import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg";
@@ -128,6 +129,54 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
         <BentoGraphic variant="unified" />
       </Card>
     </BentoGrid>
+  </Section>
+
+  {/* How it works */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        Here’s what you can get done with acerna in <strong>4 weeks</strong>
+      </Heading>
+    </ContentWrapper>
+    <StepTimeline
+      steps={[
+        {
+          label: "Today",
+          heading: "Get started",
+          points: [
+            "Connect your finance tools",
+            "Import your existing policies",
+            "Invite your approvers",
+            "Map your first workflow",
+          ],
+        },
+        {
+          label: "Week 2",
+          heading: "Get comfortable",
+          points: [
+            "Automate routine approvals",
+            "Flag risky transactions",
+            "Reconcile payouts daily",
+            "Track every exception",
+          ],
+        },
+        {
+          label: "Week 4",
+          heading: "Easier to switch",
+          points: [
+            "Retire manual checks",
+            "Launch in new markets",
+            "Export audit-ready reports",
+            "Scale without extra headcount",
+          ],
+        },
+      ]}
+    />
   </Section>
   <MotionView />
 </Layout>
