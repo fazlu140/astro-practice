@@ -95,7 +95,7 @@ export function reveal(scope: Element, { delay = 0, stagger = 0.06 } = {}) {
         .set(element, { autoAlpha: 1 }, at)
         .fromTo(
           lines(element),
-          { yPercent: 105 },
+          { yPercent: 125 },
           { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.09 },
           at,
         );

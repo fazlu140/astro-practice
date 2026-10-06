@@ -49,23 +49,24 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       paddingTop="none"
       gap="7"
       containerClass="hero-home_content"
+      data-motion-scope
       {...rest}
     >
       <div slot="background" class="hero-home_stage" aria-hidden="true">
         <div class="hero-home_artboard">
-          <div class="hero-home_glow" />
+          <div class="hero-home_glow" data-motion />
           <div class="hero-home_dots" />
-          <div class="hero-home_ring" />
-          <div class="hero-home_ring" />
-          <div class="hero-home_ring" />
-          <div class="hero-home_ring" />
-          <div class="hero-home_ring" />
+          <div class="hero-home_ring" data-motion />
+          <div class="hero-home_ring" data-motion />
+          <div class="hero-home_ring" data-motion />
+          <div class="hero-home_ring" data-motion />
+          <div class="hero-home_ring" data-motion />
 
-          <div class="hero-home_tile">
+          <div class="hero-home_tile" data-motion>
             <Icon src={tileMark} />
           </div>
 
-          <div class="hero-home_float">
+          <div class="hero-home_float" data-motion>
             <Img
               class="hero-home_shield"
               src={shieldAlert}
@@ -97,7 +98,7 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
             </div>
           </div>
 
-          <div class="hero-home_float">
+          <div class="hero-home_float" data-motion>
             <Img
               class="hero-home_shield"
               src={shieldTransfer}
@@ -149,13 +150,18 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       </div>
 
       <ContentWrapper centered>
-        <Heading class="hero-home_title" tag="h1" maxWidth={16}>
+        <Heading class="hero-home_title" tag="h1" maxWidth={16} data-motion>
           {heading}
         </Heading>
-        <Paragraph class="hero-home_text" variant="large" maxWidth={52}>
+        <Paragraph
+          class="hero-home_text"
+          variant="large"
+          maxWidth={52}
+          data-motion
+        >
           {text}
         </Paragraph>
-        <ButtonWrapper class="hero-home_buttons" marginTop="7">
+        <ButtonWrapper class="hero-home_buttons" marginTop="7" data-motion>
           <Button element="link" href="/contact">
             Book a Demo
           </Button>
@@ -165,7 +171,7 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
         </ButtonWrapper>
       </ContentWrapper>
 
-      <LogoStrip class="hero-home_logos">
+      <LogoStrip class="hero-home_logos" data-motion>
         Powering <strong>50+ firms</strong> globally with conflict-free
         infrastructure.
         <Fragment slot="logos">
@@ -185,6 +191,123 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
     </Section>
   )
 }
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { lines, ready } from "@/utils/motion.ts";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    document.querySelectorAll<HTMLElement>(".hero-home_wrap").forEach((hero) => {
+      const find = gsap.utils.selector(hero);
+      const floats = find(".hero-home_float");
+      const title = find(".hero-home_title")[0] as HTMLElement;
+      ready(hero);
+
+      document.fonts.ready.then(() => {
+        const timeline = gsap.timeline({
+          defaults: { ease: "power3.out" },
+          onComplete: () => hero.setAttribute("data-live", ""),
+        });
+
+        timeline
+          .fromTo(
+            find(".hero-home_glow"),
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 1.4, ease: "power1.out" },
+            0,
+          )
+          .fromTo(
+            find(".hero-home_ring").reverse(),
+            { autoAlpha: 0, scale: 0.86 },
+            { autoAlpha: 1, scale: 1, duration: 1.2, stagger: 0.09 },
+            0.05,
+          )
+          .fromTo(
+            find(".hero-home_tile"),
+            { autoAlpha: 0, scale: 0.5, rotation: -12 },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              rotation: 0,
+              duration: 0.9,
+              ease: "back.out(1.9)",
+            },
+            0.15,
+          )
+          .set(title, { autoAlpha: 1 }, 0.3)
+          .fromTo(
+            lines(title),
+            { yPercent: 125 },
+            { yPercent: 0, duration: 1, ease: "power4.out", stagger: 0.1 },
+            0.3,
+          )
+          .fromTo(
+            find(".hero-home_text, .hero-home_buttons, .hero-home_logos"),
+            { autoAlpha: 0, y: 24 },
+            { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.1 },
+            0.55,
+          );
+
+        floats.forEach((float, index) => {
+          const inside = gsap.utils.selector(float);
+          const at = 0.5 + index * 0.4;
+          timeline
+            .set(float, { autoAlpha: 1 }, at)
+            .fromTo(
+              inside(".hero-home_card"),
+              { autoAlpha: 0, y: 28, scale: 0.94 },
+              { autoAlpha: 1, y: 0, scale: 1, duration: 0.8 },
+              at,
+            )
+            .fromTo(
+              inside(
+                ".hero-home_card_name, .hero-home_card_details, .hero-home_card_action",
+              ),
+              { autoAlpha: 0, y: 10 },
+              { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.1 },
+              at + 0.2,
+            )
+            .fromTo(
+              inside(".hero-home_shield"),
+              { autoAlpha: 0, scale: 0.3, rotation: index ? 25 : -25 },
+              {
+                autoAlpha: 1,
+                scale: 1,
+                rotation: 0,
+                duration: 0.8,
+                ease: "back.out(2)",
+              },
+              at + 0.3,
+            )
+            .fromTo(
+              inside(".hero-home_pill"),
+              { autoAlpha: 0, scale: 0.5 },
+              {
+                autoAlpha: 1,
+                scale: 1,
+                duration: 0.5,
+                ease: "back.out(2.5)",
+                stagger: 0.1,
+              },
+              at + 0.55,
+            );
+        });
+      });
+
+      const scrollTrigger = {
+        trigger: hero,
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.6,
+      };
+      gsap.to(floats[0], { x: -48, y: -80, ease: "none", scrollTrigger });
+      gsap.to(floats[1], { x: 48, y: -130, ease: "none", scrollTrigger });
+    });
+  });
+</script>
 
 <style is:global>
   @layer components {
@@ -528,133 +651,76 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       }
     }
 
-    /* Entrance */
-    @media (prefers-reduced-motion: no-preference) {
-      .hero-home_tile {
-        animation: hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      }
-
-      .hero-home_title {
-        animation: hero-home-lift 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      }
-
-      .hero-home_text,
-      .hero-home_buttons,
-      .hero-home_logos {
-        animation: hero-home-rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
-      }
-
-      .hero-home_text {
-        animation-delay: 70ms;
-      }
-
-      .hero-home_buttons {
-        animation-delay: 140ms;
-      }
-
-      .hero-home_logos {
-        animation-delay: 210ms;
-      }
-
-      .hero-home_float {
-        --_from: -1.5rem;
-        animation: hero-home-drift 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 250ms
-          both;
-        & + & {
-          --_from: 1.5rem;
-          animation-delay: 350ms;
-        }
-      }
-
-      .hero-home_card {
-        animation: hero-home-bob 6s ease-in-out 1.2s infinite alternate;
-        .hero-home_float + .hero-home_float & {
-          animation-delay: 2.2s;
-        }
-      }
-
-      /* Ambient */
-      .hero-home_glow {
-        animation: hero-home-glow 12s ease-in-out infinite alternate;
-      }
-
-      .hero-home_ring {
-        animation: hero-home-breathe 8s ease-in-out infinite alternate;
-        &:nth-of-type(4) {
-          animation-delay: -1.6s;
-        }
-        &:nth-of-type(5) {
-          animation-delay: -3.2s;
-        }
-        &:nth-of-type(6) {
-          animation-delay: -4.8s;
-        }
-        &:nth-of-type(7) {
-          animation-delay: -6.4s;
-        }
-      }
-
-      .hero-home_tile {
-        animation:
-          hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
-          hero-home-hover 5s ease-in-out 700ms infinite alternate;
-        &::after {
-          animation: hero-home-sheen 6s ease-in-out 2s infinite;
-        }
-      }
-
-      .hero-home_shield {
-        animation: hero-home-hover 4s ease-in-out infinite alternate;
-        .hero-home_float + .hero-home_float & {
-          animation-delay: -2s;
-        }
-      }
-
-      .hero-home_light {
-        animation: hero-home-blink 1.4s ease-in-out infinite alternate;
-      }
-
-      .hero-home_pill:is(.blocked, .completed) {
-        animation: hero-home-pulse 5s ease-in-out 2s infinite;
-      }
-
-      .hero-home_card_action::after {
-        animation: hero-home-sheen 5s ease-in-out 3s infinite;
-        .hero-home_float + .hero-home_float & {
-          animation-delay: 5.5s;
-        }
-      }
-
-      /* Scroll */
-      @supports (animation-timeline: scroll()) {
-        .hero-home_glow {
-          animation:
-            hero-home-glow 12s ease-in-out infinite alternate,
-            hero-home-away linear both;
-          animation-timeline: auto, scroll(root block);
-          animation-range: normal, 0rem 45rem;
-          --_away: 0 -4rem;
+    /* Ambient */
+    .hero-home_wrap[data-live] {
+      @media (prefers-reduced-motion: no-preference) {
+        & .hero-home_glow {
+          animation: hero-home-glow 12s ease-in-out infinite alternate;
         }
 
-        .hero-home_tile {
-          animation:
-            hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
-            hero-home-hover 5s ease-in-out 700ms infinite alternate,
-            hero-home-shrink linear both;
-          animation-timeline: auto, auto, scroll(root block);
-          animation-range: normal, normal, 0rem 45rem;
+        & .hero-home_ring {
+          animation: hero-home-breathe 8s ease-in-out infinite alternate;
+          &:nth-of-type(4) {
+            animation-duration: 9s;
+            animation-delay: -1.6s;
+          }
+          &:nth-of-type(5) {
+            animation-duration: 7s;
+            animation-delay: -3.2s;
+          }
+          &:nth-of-type(6) {
+            animation-duration: 10s;
+            animation-delay: -4.8s;
+          }
+          &:nth-of-type(7) {
+            animation-duration: 6.5s;
+            animation-delay: -6.4s;
+          }
         }
 
-        .hero-home_float {
-          --_away: -3rem -5rem;
-          animation:
-            hero-home-drift 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 250ms both,
-            hero-home-away linear both;
-          animation-timeline: auto, scroll(root block);
-          animation-range: normal, 0rem 45rem;
-          & + & {
-            --_away: 3rem -8rem;
-            animation-delay: 350ms, 0s;
+        & .hero-home_tile {
+          animation: hero-home-hover 5s ease-in-out infinite alternate;
+          &::after {
+            animation: hero-home-sheen 7s ease-in-out 1.2s infinite;
+          }
+        }
+
+        & .hero-home_card {
+          animation: hero-home-hover 6s ease-in-out infinite alternate;
+        }
+
+        & .hero-home_shield {
+          animation: hero-home-hover 4.3s ease-in-out -1s infinite alternate;
+        }
+
+        & .hero-home_light {
+          animation: hero-home-blink 1.4s ease-in-out infinite alternate;
+        }
+
+        & .hero-home_pill.blocked {
+          animation: hero-home-pulse 6.5s ease-in-out 2.2s infinite;
+        }
+
+        & .hero-home_pill.completed {
+          animation: hero-home-pulse 8s ease-in-out 4.6s infinite;
+        }
+
+        & .hero-home_card_action::after {
+          animation: hero-home-sheen 9s ease-in-out 3.4s infinite;
+        }
+
+        & .hero-home_float + .hero-home_float {
+          & .hero-home_card {
+            animation-duration: 7.3s;
+            animation-delay: -2.4s;
+          }
+          & .hero-home_shield {
+            animation-duration: 5.1s;
+            animation-delay: -3s;
+          }
+          & .hero-home_card_action::after {
+            animation-duration: 11s;
+            animation-delay: 6.1s;
           }
         }
       }
@@ -671,24 +737,23 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
     .hero-home_float,
     .hero-home_tile {
       pointer-events: auto;
-      transition: rotate 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
-      @media (hover: hover) {
-        &:hover {
-          rotate: -2deg;
-        }
-        .hero-home_float + &:hover {
-          rotate: 2deg;
-        }
-      }
+      transition:
+        rotate 250ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        scale 250ms cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .hero-home_card_details,
+    .hero-home_card_action,
+    .hero-home_pill,
+    .hero-home_shield {
+      transition:
+        translate 250ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        rotate 250ms cubic-bezier(0.2, 0.7, 0.2, 1),
+        scale 250ms cubic-bezier(0.2, 0.7, 0.2, 1);
     }
 
     .hero-home_tile {
       overflow: clip;
-      @media (hover: hover) {
-        &:hover {
-          rotate: 8deg;
-        }
-      }
     }
 
     .hero-home_card_action {
@@ -708,6 +773,38 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
         transparent 65%
       );
       translate: -120% 0;
+    }
+
+    @media (hover: hover) {
+      .hero-home_tile:hover {
+        rotate: 6deg;
+        scale: 1.06;
+      }
+
+      .hero-home_float:hover {
+        scale: 1.03;
+        & .hero-home_shield {
+          rotate: 10deg;
+          scale: 1.12;
+        }
+        & .hero-home_card_details {
+          translate: 0 calc(var(--_u) * -2);
+        }
+        & .hero-home_pill {
+          translate: 0 calc(var(--_u) * -1.5);
+          transition-delay: 40ms;
+        }
+        & .hero-home_pill + .hero-home_pill {
+          transition-delay: 90ms;
+        }
+        & .hero-home_card_action {
+          scale: 1.03;
+          transition-delay: 60ms;
+          &::after {
+            animation: hero-home-sweep 700ms ease-out;
+          }
+        }
+      }
     }
 
     @keyframes hero-home-glow {
@@ -737,6 +834,12 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       }
     }
 
+    @keyframes hero-home-sweep {
+      to {
+        translate: 120% 0;
+      }
+    }
+
     @keyframes hero-home-blink {
       to {
         opacity: 0.35;
@@ -752,51 +855,6 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       }
       6% {
         scale: 1.12;
-      }
-    }
-
-    @keyframes hero-home-away {
-      to {
-        translate: var(--_away);
-      }
-    }
-
-    @keyframes hero-home-shrink {
-      to {
-        scale: 0.82;
-      }
-    }
-
-    @keyframes hero-home-pop {
-      from {
-        opacity: 0;
-        transform: scale(0.9);
-      }
-    }
-
-    @keyframes hero-home-lift {
-      from {
-        transform: translateY(1rem);
-      }
-    }
-
-    @keyframes hero-home-rise {
-      from {
-        opacity: 0;
-        transform: translateY(1rem);
-      }
-    }
-
-    @keyframes hero-home-drift {
-      from {
-        opacity: 0;
-        transform: translateX(var(--_from));
-      }
-    }
-
-    @keyframes hero-home-bob {
-      to {
-        transform: translateY(-0.25rem);
       }
     }
   }

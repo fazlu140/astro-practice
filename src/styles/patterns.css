@@ -233,6 +233,5 @@
 }
 
 .motion-line-mask {
-  padding-block: 0.14em;
-  margin-block: -0.14em;
+  overflow-clip-margin: 0.12em;
 }
