@@ -572,6 +572,199 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
           animation-delay: 2.2s;
         }
       }
+
+      /* Ambient */
+      .hero-home_glow {
+        animation: hero-home-glow 12s ease-in-out infinite alternate;
+      }
+
+      .hero-home_ring {
+        animation: hero-home-breathe 8s ease-in-out infinite alternate;
+        &:nth-of-type(4) {
+          animation-delay: -1.6s;
+        }
+        &:nth-of-type(5) {
+          animation-delay: -3.2s;
+        }
+        &:nth-of-type(6) {
+          animation-delay: -4.8s;
+        }
+        &:nth-of-type(7) {
+          animation-delay: -6.4s;
+        }
+      }
+
+      .hero-home_tile {
+        animation:
+          hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
+          hero-home-hover 5s ease-in-out 700ms infinite alternate;
+        &::after {
+          animation: hero-home-sheen 6s ease-in-out 2s infinite;
+        }
+      }
+
+      .hero-home_shield {
+        animation: hero-home-hover 4s ease-in-out infinite alternate;
+        .hero-home_float + .hero-home_float & {
+          animation-delay: -2s;
+        }
+      }
+
+      .hero-home_light {
+        animation: hero-home-blink 1.4s ease-in-out infinite alternate;
+      }
+
+      .hero-home_pill:is(.blocked, .completed) {
+        animation: hero-home-pulse 5s ease-in-out 2s infinite;
+      }
+
+      .hero-home_card_action::after {
+        animation: hero-home-sheen 5s ease-in-out 3s infinite;
+        .hero-home_float + .hero-home_float & {
+          animation-delay: 5.5s;
+        }
+      }
+
+      /* Scroll */
+      @supports (animation-timeline: scroll()) {
+        .hero-home_glow {
+          animation:
+            hero-home-glow 12s ease-in-out infinite alternate,
+            hero-home-away linear both;
+          animation-timeline: auto, scroll(root block);
+          animation-range: normal, 0rem 45rem;
+          --_away: 0 -4rem;
+        }
+
+        .hero-home_tile {
+          animation:
+            hero-home-pop 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both,
+            hero-home-hover 5s ease-in-out 700ms infinite alternate,
+            hero-home-shrink linear both;
+          animation-timeline: auto, auto, scroll(root block);
+          animation-range: normal, normal, 0rem 45rem;
+        }
+
+        .hero-home_float {
+          --_away: -3rem -5rem;
+          animation:
+            hero-home-drift 800ms cubic-bezier(0.2, 0.7, 0.2, 1) 250ms both,
+            hero-home-away linear both;
+          animation-timeline: auto, scroll(root block);
+          animation-range: normal, 0rem 45rem;
+          & + & {
+            --_away: 3rem -8rem;
+            animation-delay: 350ms, 0s;
+          }
+        }
+      }
+    }
+
+    /* Hover */
+    .hero-home_content {
+      pointer-events: none;
+      & :is(.heading, .text, .button-wrapper, .logo-strip_wrap) {
+        pointer-events: auto;
+      }
+    }
+
+    .hero-home_float,
+    .hero-home_tile {
+      pointer-events: auto;
+      transition: rotate 500ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      @media (hover: hover) {
+        &:hover {
+          rotate: -2deg;
+        }
+        .hero-home_float + &:hover {
+          rotate: 2deg;
+        }
+      }
+    }
+
+    .hero-home_tile {
+      overflow: clip;
+      @media (hover: hover) {
+        &:hover {
+          rotate: 8deg;
+        }
+      }
+    }
+
+    .hero-home_card_action {
+      position: relative;
+      overflow: clip;
+    }
+
+    .hero-home_tile::after,
+    .hero-home_card_action::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(
+        115deg,
+        transparent 35%,
+        color-mix(in lab, var(--white) 55%, transparent) 50%,
+        transparent 65%
+      );
+      translate: -120% 0;
+    }
+
+    @keyframes hero-home-glow {
+      to {
+        opacity: 0.75;
+        scale: 1.06;
+      }
+    }
+
+    @keyframes hero-home-breathe {
+      to {
+        opacity: 0.6;
+        scale: 1.025;
+      }
+    }
+
+    @keyframes hero-home-hover {
+      to {
+        translate: 0 calc(var(--_u) * -6);
+      }
+    }
+
+    @keyframes hero-home-sheen {
+      30%,
+      100% {
+        translate: 120% 0;
+      }
+    }
+
+    @keyframes hero-home-blink {
+      to {
+        opacity: 0.35;
+        scale: 0.8;
+      }
+    }
+
+    @keyframes hero-home-pulse {
+      0%,
+      12%,
+      100% {
+        scale: 1;
+      }
+      6% {
+        scale: 1.12;
+      }
+    }
+
+    @keyframes hero-home-away {
+      to {
+        translate: var(--_away);
+      }
+    }
+
+    @keyframes hero-home-shrink {
+      to {
+        scale: 0.82;
+      }
     }
 
     @keyframes hero-home-pop {
