@@ -1,0 +1,13 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="13.8207" height="13.8207" viewBox="0 0 13.8207 13.8207" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<rect width="13.8207" height="13.8207" rx="6.91034" fill="#4FBA51"/>
+<rect width="13.8207" height="13.8207" rx="6.91034" fill="url(#paint0_radial_0_170)" fill-opacity="0.2" style="mix-blend-mode:plus-lighter"/>
+<path id="Vector" d="M6.00663 9.08283C5.86145 9.08283 5.76466 9.0359 5.66788 8.94205L4.21609 7.53425C4.02251 7.34655 4.02251 7.06499 4.21609 6.87728C4.40966 6.68958 4.70002 6.68958 4.89359 6.87728L6.00663 7.95659L9.05538 5.00022C9.24896 4.81251 9.53932 4.81251 9.73289 5.00022C9.92646 5.18793 9.92646 5.46949 9.73289 5.65719L6.34538 8.94205C6.24859 9.0359 6.15181 9.08283 6.00663 9.08283Z" fill="white"/>
+</g>
+<defs>
+<radialGradient id="paint0_radial_0_170" cx="0" cy="0" r="1" gradientTransform="matrix(13.4368 13.4508 -8.45827 5.87992 0.191086 0.326929)" gradientUnits="userSpaceOnUse">
+<stop stop-color="white"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>
