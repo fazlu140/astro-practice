@@ -61,6 +61,7 @@
   /* Max width */
   --max-width-small: 45rem;
   --max-width-main: 60rem;
+  --max-width-wide: 65rem;
   --max-width-full: 100%;
 
   /* Nav */
