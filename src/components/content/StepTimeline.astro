@@ -171,15 +171,6 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
           items.slice(1).forEach((_, index) => {
             intro.add(() => go(index + 1), 2.2 + index * 1.6);
           });
-          intro.add(() => {
-            items.forEach((item, index) => {
-              item
-                .querySelectorAll(".step-timeline_chip, .step-timeline_card")
-                .forEach((target) =>
-                  target.addEventListener("pointerenter", () => go(index, 0.6)),
-                );
-            });
-          }, ">");
         };
 
         ScrollTrigger.create({
