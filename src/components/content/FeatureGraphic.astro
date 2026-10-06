@@ -1,0 +1,61 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+  /** Which mock interface to draw. */
+  variant: "policy" | "checkout" | "payment" | "compliance";
+};
+
+const { render = true, variant, class: className, ...rest } = Astro.props;
+---
+
+{
+  render && variant && (
+    <div
+      class:list={["feature-graphic_wrap", variant, className]}
+      aria-hidden="true"
+      {...rest}
+    >
+      <div class="feature-graphic_board" />
+    </div>
+  )
+}
+
+<style is:global>
+  @layer components {
+    /* Artboard */
+    .feature-graphic_wrap {
+      --_u: calc(100cqw / 414);
+      --_completed: #157a66;
+      --_blocked: #cc2e46;
+      --_processing: #ad7e09;
+      container-type: inline-size;
+      width: 100%;
+      max-width: 25.875rem;
+      aspect-ratio: 414 / 371;
+    }
+
+    .feature-graphic_board {
+      position: relative;
+      height: 100%;
+      overflow: clip;
+      background-image: linear-gradient(var(--orange-100), var(--orange-50));
+      border: var(--border-width) solid var(--border);
+      border-radius: calc(var(--_u) * 20);
+      color: var(--neutral-900);
+      font-size: calc(var(--_u) * 10.7);
+      font-weight: var(--primary-medium);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: calc(var(--_u) * 64);
+        background-image: linear-gradient(transparent, var(--orange-50));
+      }
+    }
+  }
+</style>

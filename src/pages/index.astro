@@ -1,6 +1,14 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
+import Section from "@/components/wrapper/Section.astro";
+import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
+import Heading from "@/components/typography/Heading.astro";
 import HeroHome from "@/components/section/HeroHome.astro";
+import FeatureRow from "@/components/content/FeatureRow.astro";
+import FeatureGraphic from "@/components/content/FeatureGraphic.astro";
+import fileText from "@/assets/graphics/features/icon-file-text.svg";
+import clock from "@/assets/graphics/features/icon-clock.svg";
+import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg";
 ---
 
 <Layout title="The AI backbone for financial workflows" overlap>
@@ -9,4 +17,45 @@ import HeroHome from "@/components/section/HeroHome.astro";
     heading="The AI backbone for financial workflows."
     text="Unify compliance, approvals, and automation in one financial platform which is built to help you launch and scale securely."
   />
+
+  {/* Features */}
+  <Section>
+    <ContentWrapper centered>
+      <Heading class="heading-accent" variant="h3" maxWidth={30}>
+        <strong>Financial workflow controls</strong> that always run on autopilot.
+      </Heading>
+    </ContentWrapper>
+    <FeatureRow
+      heading="Set up smarter policy controls for transactions"
+      text="Create approval flows once and let AI enforce them in real time — no chasing, no manual checks."
+      icon={fileText}
+      buttonText="Try Acerna Today"
+    >
+      <FeatureGraphic variant="policy" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Real-time security built into every transaction."
+      text="Every payment auto-tracked and compliant — tax, policy, and approvals handled instantly."
+      icon={clock}
+      buttonText="Book A Demo"
+    >
+      <FeatureGraphic variant="checkout" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Simplified, automated checkout experience"
+      text="Vendor bills and purchases processed safely before payments clear."
+      icon={clipboardClock}
+      buttonText="Talk With Our Team"
+    >
+      <FeatureGraphic variant="payment" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Ensure every launch is compliance-ready"
+      text="Expand confidently — every campaign and region stays regulation-aligned."
+      icon={clipboardClock}
+      buttonText="Schedule a Demo"
+    >
+      <FeatureGraphic variant="compliance" />
+    </FeatureRow>
+  </Section>
 </Layout>
