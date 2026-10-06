@@ -19,6 +19,7 @@ import AccordionItem from "@/components/interactive/AccordionItem.astro";
 import Paragraph from "@/components/typography/Paragraph.astro";
 import Grid from "@/components/wrapper/Grid.astro";
 import PostCard from "@/components/content/PostCard.astro";
+import CtaHome from "@/components/section/CtaHome.astro";
 import postFeatured from "@/assets/blog/post-featured.png";
 import postTeam from "@/assets/blog/post-team.png";
 import postWorkshop from "@/assets/blog/post-workshop.png";
@@ -372,5 +373,11 @@ import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg"
       </Grid>
     </Grid>
   </Section>
+
+  {/* CTA */}
+  <CtaHome
+    heading="Ready to put your financial workflows on autopilot?"
+    buttonText="Contact Sales"
+  />
   <MotionView />
 </Layout>

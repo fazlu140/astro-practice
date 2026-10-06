@@ -56,6 +56,10 @@ const motions: Record<string, Motion> = {
     from: { autoAlpha: 1, scaleX: 1, transformOrigin: "100% 50%" },
     to: { scaleX: 0, duration: 1.1, ease: "power2.inOut" },
   },
+  sweep: {
+    from: { autoAlpha: 1, scaleX: 0, transformOrigin: "0% 50%" },
+    to: { scaleX: 1, duration: 0.9, ease: "power2.out" },
+  },
   draw: {
     from: { autoAlpha: 1, scaleY: 0, transformOrigin: "50% 0%" },
     to: { scaleY: 1, duration: 0.9, ease: "power2.out" },
