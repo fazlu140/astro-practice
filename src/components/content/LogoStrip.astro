@@ -61,6 +61,17 @@ const logos = await slotContent(Astro.slots, "logos");
       & > .image {
         flex: none;
         width: auto;
+        transition:
+          opacity 300ms var(--hover-ease),
+          translate 300ms var(--hover-ease);
+      }
+      @media (hover: hover) {
+        &:hover > .image:not(:hover) {
+          opacity: 0.45;
+        }
+        & > .image:hover {
+          translate: 0 -0.125rem;
+        }
       }
     }
   }

@@ -190,7 +190,10 @@ const named = {
       letter-spacing: var(--letter-spacing-snug);
       text-decoration: none;
       text-align: center;
-      transition: color var(--hover-duration) var(--hover-ease);
+      transition:
+        color var(--hover-duration) var(--hover-ease),
+        translate var(--hover-duration) var(--hover-ease),
+        scale var(--hover-duration) var(--hover-ease);
 
       &::before,
       &::after {
@@ -222,10 +225,15 @@ const named = {
         &:hover:not(:disabled) {
           --button-border: var(--button-border-hover);
           color: var(--button-text-hover);
+          translate: 0 -0.125em;
           &::before {
             opacity: 1;
           }
         }
+      }
+      &:active:not(:disabled) {
+        translate: 0 0;
+        scale: 0.97;
       }
       &.secondary {
         --button-background: var(--button-2-background);
@@ -274,6 +282,11 @@ const named = {
             background-position: 0 100%;
             background-size: 100% var(--border-width);
           }
+        }
+        &:hover:not(:disabled),
+        &:active:not(:disabled) {
+          translate: none;
+          scale: none;
         }
       }
       &:is(.play, .close, .arrow) {
