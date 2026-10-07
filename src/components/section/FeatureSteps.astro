@@ -174,7 +174,17 @@ const label = (step: number) => String(step).padStart(2, "0");
           ),
       });
 
-      return () => wrap.removeAttribute("data-pinned");
+      /* Tweens started from scroll callbacks are not reverted for us */
+      return () => {
+        wrap.removeAttribute("data-pinned");
+        rows.forEach((row) => {
+          timelines.get(row)?.kill();
+          gsap.killTweensOf(row.children);
+          gsap.set(row.children, { clearProps: "all" });
+        });
+        gsap.killTweensOf([digits, fill]);
+        gsap.set([digits, fill], { clearProps: "all" });
+      };
     });
   });
 </script>
@@ -187,6 +197,15 @@ const label = (step: number) => String(step).padStart(2, "0");
 
     .feature-steps_pin {
       position: relative;
+    }
+
+    /* A pin sized for desktop must never hold a narrow screen wide */
+    @media (width < 64rem) {
+      .feature-steps_track > .pin-spacer,
+      .feature-steps_track .feature-steps_pin {
+        width: auto !important;
+        max-width: 100% !important;
+      }
     }
 
     .feature-steps_list {

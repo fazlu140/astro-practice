@@ -120,6 +120,22 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
         };
       });
 
+      /* Stacked: the line ends at the last stop, not the last card */
+      media.add("(max-width: 47.99rem)", () => {
+        const fit = () => {
+          const from = stops[0].getBoundingClientRect().top;
+          const to = stops[stops.length - 1].getBoundingClientRect().top;
+          track.style.setProperty("--_reach", `${to - from}px`);
+        };
+        const observer = new ResizeObserver(fit);
+        observer.observe(wrap);
+        fit();
+        return () => {
+          observer.disconnect();
+          track.style.removeProperty("--_reach");
+        };
+      });
+
       /* Side by side: play once when the section arrives */
       media.add(`${motion} and (min-width: 48rem)`, () => {
         const go = (index: number, duration = 0.65) => {
@@ -194,7 +210,13 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
 
         const settle = () => current >= 0 && go(current, 0.01);
         window.addEventListener("resize", settle);
-        return () => window.removeEventListener("resize", settle);
+        return () => {
+          window.removeEventListener("resize", settle);
+          gsap.killTweensOf([...marker, ...fill]);
+          current = -1;
+          ticked.fill(false);
+          activate(-1);
+        };
       });
 
       /* Stacked: the marker follows the scroll */
@@ -276,13 +298,13 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
             },
           })
           .to(marker, { x: 0, y: () => distance() }, 0)
-          .to(
-            fill,
-            {
-              scaleY: () => distance() / track.getBoundingClientRect().height,
-            },
-            0,
-          );
+          .to(fill, { scaleY: 1 }, 0);
+
+        return () => {
+          current = -1;
+          ticked.fill(false);
+          activate(-1);
+        };
       });
     });
 </script>
@@ -310,6 +332,7 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
       bottom: 0;
       left: 1rem;
       width: 0.25rem;
+      height: var(--_reach, auto);
       border-radius: var(--radius-round);
       @media (width >= 48rem) {
         position: relative;
