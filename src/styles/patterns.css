@@ -218,3 +218,17 @@
     opacity: 0.5;
   }
 }
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-motion-scope]:not([data-motion-ready]) [data-motion],
+  [data-motion-scope][data-motion]:not([data-motion-ready]) {
+    visibility: hidden;
+    animation: motion-failsafe 0s 5s forwards;
+  }
+}
+
+@keyframes motion-failsafe {
+  to {
+    visibility: visible;
+  }
+}

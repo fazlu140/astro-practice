@@ -1,0 +1,54 @@
+---
+
+---
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { ready, reveal } from "@/utils/motion.ts";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    const scopes = gsap.utils.toArray<HTMLElement>(
+      '[data-motion-scope="view"]',
+    );
+    scopes.forEach(ready);
+    ScrollTrigger.batch(scopes, {
+      start: "top 85%",
+      once: true,
+      onEnter: (batch) => {
+        let visible = 0;
+        batch.forEach((scope) => {
+          const passed = scope.getBoundingClientRect().bottom < 0;
+          if (passed) {
+            reveal(scope as HTMLElement).progress(1);
+            return;
+          }
+          reveal(scope as HTMLElement, { delay: Math.min(visible, 3) * 0.08 });
+          visible += 1;
+        });
+      },
+    });
+
+    let timer = 0;
+    let height = document.body.offsetHeight;
+    const observer = new ResizeObserver(() => {
+      if (document.body.offsetHeight === height) return;
+      height = document.body.offsetHeight;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
+    });
+    observer.observe(document.body);
+
+    requestAnimationFrame(() => {
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    });
+
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+    };
+  });
+</script>

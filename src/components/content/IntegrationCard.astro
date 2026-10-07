@@ -1,0 +1,381 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
+import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
+import Heading from "@/components/typography/Heading.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/media/Icon.astro";
+import tileMark from "@/assets/graphics/hero/tile-mark.svg";
+import check from "@/assets/icons/check.svg";
+import logo1 from "@/assets/graphics/integrations/logo-1.svg";
+import logo2 from "@/assets/graphics/integrations/logo-2.svg";
+import logo3 from "@/assets/graphics/integrations/logo-3.svg";
+import logo4 from "@/assets/graphics/integrations/logo-4.svg";
+import logo5 from "@/assets/graphics/integrations/logo-5.svg";
+import logo6 from "@/assets/graphics/integrations/logo-6.svg";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+  /** Heading text. */
+  heading: string;
+  /** Checklist items. */
+  points?: string[];
+  /** Button label. Omit to render no button. */
+  buttonText?: string;
+  /** Button destination. */
+  buttonHref?: string;
+};
+
+const {
+  render = true,
+  heading,
+  points = [],
+  buttonText,
+  buttonHref = "/integrations",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const rings = [
+  { x: -63, y: -58, w: 271, h: 286, r: 39 },
+  { x: -134, y: -98, w: 411, h: 385, r: 39 },
+  { x: -187, y: -157, w: 519, h: 499, r: 68 },
+  { x: -231, y: -215, w: 613, h: 606, r: 85 },
+  { x: -260, y: -203, w: 702, h: 691, r: 97 },
+];
+
+const logos = [
+  { src: logo1, x: 239.5, y: 44.5, depth: 1 },
+  { src: logo2, x: 191, y: 194, depth: 1.4 },
+  { src: logo1, x: 21, y: 248, depth: 0.8 },
+  { src: logo6, x: 148, y: 348, depth: 1.8 },
+  { src: logo3, x: 363, y: 143, depth: 2.2 },
+  { src: logo1, x: 323, y: 292, depth: 1.2 },
+  { src: logo5, x: -1, y: 404, depth: 1.6 },
+  { src: logo4, x: 277, y: 420, depth: 2 },
+];
+---
+
+{
+  render && heading && (
+    <ContentWrapper
+      variant="contain"
+      reverse
+      class={["integration-card_wrap", className].filter(Boolean).join(" ")}
+      data-motion-scope="view"
+      {...rest}
+    >
+      <Heading tag="h3" variant="h4" data-motion="lines">
+        {heading}
+      </Heading>
+      {points.length > 0 && (
+        <ul class="integration-card_points" role="list">
+          {points.map((point) => (
+            <li data-motion="lift">
+              <span class="integration-card_tick">
+                <Icon src={check} />
+              </span>
+              {point}
+            </li>
+          ))}
+        </ul>
+      )}
+      {buttonText && (
+        <ButtonWrapper data-motion="lift">
+          <Button element="link" href={buttonHref} emphasis="secondary">
+            {buttonText}
+          </Button>
+        </ButtonWrapper>
+      )}
+      <div class="integration-card_graphic" slot="column2" aria-hidden="true">
+        <div class="integration-card_board">
+          <div class="integration-card_glow" />
+          <div class="integration-card_dots" />
+          {rings.map((ring) => (
+            <div
+              class="integration-card_ring"
+              style={`--_x: ${ring.x}; --_y: ${ring.y}; --_w: ${ring.w}; --_h: ${ring.h}; --_r: ${ring.r}`}
+              data-motion="swell"
+            />
+          ))}
+          <div class="integration-card_pulse" />
+          <div class="integration-card_tile" data-motion="pop">
+            <Icon src={tileMark} />
+          </div>
+          {logos.map((logo, index) => (
+            <div
+              class="integration-card_logo"
+              style={`--_x: ${logo.x}; --_y: ${logo.y}; --_i: ${index}`}
+              data-depth={logo.depth}
+              data-motion="pop"
+            >
+              <Icon src={logo.src} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </ContentWrapper>
+  )
+}
+
+<script>
+  import { gsap } from "gsap";
+
+  gsap
+    .matchMedia()
+    .add("(prefers-reduced-motion: no-preference) and (hover: hover)", () => {
+      const cleanups: Array<() => void> = [];
+      document
+        .querySelectorAll<HTMLElement>(".integration-card_graphic")
+        .forEach((graphic) => {
+          const movers = Array.from(
+            graphic.querySelectorAll<HTMLElement>(".integration-card_logo"),
+          ).map((logo) => ({
+            depth: Number(logo.dataset.depth ?? 1),
+            x: gsap.quickTo(logo, "x", { duration: 0.7, ease: "power3" }),
+            y: gsap.quickTo(logo, "y", { duration: 0.7, ease: "power3" }),
+          }));
+          const move = (event: PointerEvent) => {
+            const box = graphic.getBoundingClientRect();
+            const across = (event.clientX - box.left) / box.width - 0.5;
+            const down = (event.clientY - box.top) / box.height - 0.5;
+            movers.forEach((mover) => {
+              mover.x(across * mover.depth * 12);
+              mover.y(down * mover.depth * 12);
+            });
+          };
+          const rest = () =>
+            movers.forEach((mover) => {
+              mover.x(0);
+              mover.y(0);
+            });
+          graphic.addEventListener("pointermove", move);
+          graphic.addEventListener("pointerleave", rest);
+          cleanups.push(() => {
+            graphic.removeEventListener("pointermove", move);
+            graphic.removeEventListener("pointerleave", rest);
+          });
+        });
+      return () => cleanups.forEach((cleanup) => cleanup());
+    });
+</script>
+
+<style is:global>
+  @layer components {
+    .integration-card_wrap.layout.contain {
+      background-color: var(--white);
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: var(--radius-large);
+      box-shadow:
+        0 0.1875rem 0.375rem
+          color-mix(in lab, var(--neutral-200) 60%, transparent),
+        0 1.125rem 2.25rem
+          color-mix(in lab, var(--neutral-700) 6%, transparent);
+      & .button-wrapper {
+        margin-top: var(--space-6);
+      }
+    }
+
+    .integration-card_points {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      color: var(--text-2);
+      font-size: var(--text-large);
+      line-height: var(--text-large-line-height);
+      list-style: none;
+      & li {
+        display: flex;
+        align-items: center;
+        gap: var(--space-1);
+      }
+    }
+
+    .integration-card_tick {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 1.125rem;
+      height: 1.125rem;
+      background-color: var(--orange-300);
+      border-radius: 50%;
+      color: var(--white);
+      & .icon {
+        --_size: 0.5625rem;
+        --border-width: 0.1rem;
+        aspect-ratio: auto;
+      }
+    }
+
+    /* Graphic */
+    .integration-card_graphic {
+      --_u: calc(100cqw / 493);
+      --_ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+      container-type: inline-size;
+      width: 100%;
+      aspect-ratio: 493 / 472;
+    }
+
+    .integration-card_board {
+      position: relative;
+      height: 100%;
+      overflow: clip;
+      &::after {
+        content: "";
+        position: absolute;
+        inset: 0 0 0 auto;
+        width: calc(var(--_u) * 110);
+        background-image: linear-gradient(to right, transparent, var(--white));
+      }
+    }
+
+    .integration-card_glow {
+      position: absolute;
+      inset: calc(var(--_u) * -80) auto auto calc(var(--_u) * -120);
+      width: calc(var(--_u) * 620);
+      height: calc(var(--_u) * 360);
+      background-image:
+        radial-gradient(
+          ellipse 36% 46% at 34% 46%,
+          color-mix(in lab, var(--orange-300) 70%, transparent),
+          transparent
+        ),
+        radial-gradient(
+          ellipse 30% 44% at 64% 44%,
+          color-mix(in lab, var(--orange-700) 30%, transparent),
+          transparent
+        );
+    }
+
+    .integration-card_dots {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: calc(var(--_u) * 262);
+      height: calc(var(--_u) * 204);
+      background-image: radial-gradient(
+        circle,
+        var(--white) calc(var(--_u) * 0.9),
+        transparent calc(var(--_u) * 1.2)
+      );
+      background-size: calc(var(--_u) * 7) calc(var(--_u) * 7);
+      mix-blend-mode: soft-light;
+      opacity: 0.7;
+    }
+
+    .integration-card_ring {
+      position: absolute;
+      top: calc(var(--_u) * var(--_y));
+      left: calc(var(--_u) * var(--_x));
+      width: calc(var(--_u) * var(--_w));
+      height: calc(var(--_u) * var(--_h));
+      background-color: color-mix(in lab, var(--white) 20%, transparent);
+      border: var(--border-width) solid
+        color-mix(in lab, var(--white) 80%, transparent);
+      border-radius: calc(var(--_u) * var(--_r));
+      box-shadow: 0 0 0 var(--border-width)
+        color-mix(in lab, var(--orange-100) 80%, transparent);
+    }
+
+    .integration-card_pulse {
+      position: absolute;
+      top: calc(var(--_u) * 44);
+      left: calc(var(--_u) * 39);
+      width: calc(var(--_u) * 120);
+      height: calc(var(--_u) * 120);
+      border: calc(var(--_u) * 1.5) solid var(--orange-300);
+      border-radius: calc(var(--_u) * 24);
+      opacity: 0;
+    }
+
+    .integration-card_tile {
+      position: absolute;
+      z-index: 2;
+      top: calc(var(--_u) * 44);
+      left: calc(var(--_u) * 39);
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 120);
+      height: calc(var(--_u) * 120);
+      background-color: var(--orange-100);
+      background-image:
+        radial-gradient(circle at 88% 30%, var(--orange-700), transparent 62%),
+        radial-gradient(circle at 18% 78%, var(--orange-300), transparent 70%);
+      border: calc(var(--_u) * 1.5) solid var(--white);
+      border-radius: calc(var(--_u) * 24);
+      box-shadow:
+        inset 0 0 calc(var(--_u) * 10)
+          color-mix(in lab, var(--white) 60%, transparent),
+        0 calc(var(--_u) * 12) calc(var(--_u) * 20)
+          color-mix(in lab, var(--orange-300) 25%, transparent);
+      & .icon {
+        --_size: calc(var(--_u) * 50);
+      }
+    }
+
+    .integration-card_logo {
+      position: absolute;
+      z-index: 1;
+      top: calc(var(--_u) * var(--_y));
+      left: calc(var(--_u) * var(--_x));
+      display: grid;
+      place-items: center;
+      padding: calc(var(--_u) * 16);
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 20);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 4) var(--white),
+        0 calc(var(--_u) * 3) calc(var(--_u) * 6)
+          color-mix(in lab, var(--neutral-200) 60%, transparent),
+        0 calc(var(--_u) * 18) calc(var(--_u) * 36)
+          color-mix(in lab, var(--neutral-700) 6%, transparent);
+      transition:
+        rotate 250ms var(--_ease),
+        scale 250ms var(--_ease);
+      & .icon {
+        --_size: calc(var(--_u) * 40);
+        aspect-ratio: auto;
+      }
+      @media (hover: hover) {
+        &:hover {
+          rotate: -6deg;
+          scale: 1.1;
+        }
+      }
+    }
+
+    /* Loops */
+    .integration-card_graphic {
+      @media (prefers-reduced-motion: no-preference) {
+        & .integration-card_logo {
+          animation: integration-card-float calc(4s + var(--_i) * 0.45s)
+            ease-in-out calc(var(--_i) * -0.9s) infinite alternate;
+        }
+        & .integration-card_pulse {
+          animation: integration-card-pulse 5s ease-out 1.5s infinite;
+        }
+      }
+    }
+
+    @keyframes integration-card-float {
+      to {
+        translate: 0 calc(var(--_u) * -7);
+      }
+    }
+
+    @keyframes integration-card-pulse {
+      0% {
+        opacity: 0.6;
+        scale: 1;
+      }
+      70%,
+      100% {
+        opacity: 0;
+        scale: 5;
+      }
+    }
+  }
+</style>

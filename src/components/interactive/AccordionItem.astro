@@ -12,6 +12,8 @@ type Props = HTMLAttributes<"details"> & {
   heading?: string;
   /** Heading level. */
   headingTag?: "h2" | "h3" | "h4" | "h5" | "h6";
+  /** Item layout. */
+  variant?: "default" | "card";
   /** Open on load. */
   open?: boolean;
 };
@@ -20,6 +22,7 @@ const {
   render = true,
   heading,
   headingTag = "h3",
+  variant = "default",
   open = false,
   class: className,
   ...rest
@@ -31,13 +34,21 @@ const content = await slotContent(Astro.slots);
 {
   render && heading && content && (
     <details
-      class:list={["accordion_item", className]}
+      class:list={[
+        "accordion_item",
+        variant !== "default" && variant,
+        className,
+      ]}
       open={open}
       data-accordion-group
       {...rest}
     >
       <summary class="accordion_toggle">
-        <Heading tag={headingTag} variant="h5" class="accordion_title">
+        <Heading
+          tag={headingTag}
+          variant={variant === "card" ? "large" : "h5"}
+          class="accordion_title"
+        >
           {heading}
         </Heading>
         <Icon class="accordion_icon" src={arrow} variant="small" />
@@ -107,6 +118,70 @@ const content = await slotContent(Astro.slots);
 
     .accordion_body {
       padding-bottom: var(--space-5);
+    }
+
+    /* Card */
+    .accordion_wrap:has(> .accordion_item.card) {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      width: 100%;
+    }
+
+    .accordion_item.card {
+      background-color: var(--white);
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: var(--radius-small);
+      box-shadow: 0 0.1875rem 0.375rem
+        color-mix(in lab, var(--neutral-200) 50%, transparent);
+      transition:
+        border-color var(--hover-duration) var(--hover-ease),
+        translate 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      & .accordion_toggle {
+        padding: 1.125rem var(--space-4);
+      }
+      & .accordion_title {
+        font-weight: var(--primary-medium);
+      }
+      & .accordion_icon {
+        transition:
+          rotate var(--open-duration) var(--open-ease),
+          translate 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      & .accordion_body {
+        padding: 0 calc(var(--space-4) * 2 + 1rem) 1.25rem var(--space-4);
+        color: var(--text-2);
+        opacity: 0;
+        translate: 0 -0.5rem;
+        transition:
+          opacity 300ms var(--open-ease),
+          translate 300ms var(--open-ease);
+      }
+      &[open] .accordion_body {
+        opacity: 1;
+        translate: 0 0;
+        transition-delay: 80ms;
+        @starting-style {
+          opacity: 0;
+          translate: 0 -0.5rem;
+        }
+      }
+      @media (hover: hover) {
+        &:hover {
+          border-color: var(--orange-300);
+          translate: 0 -0.125rem;
+          & .accordion_icon {
+            translate: 0 0.1875rem;
+          }
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        & .accordion_body {
+          opacity: 1;
+          translate: none;
+          transition: none;
+        }
+      }
     }
   }
 </style>

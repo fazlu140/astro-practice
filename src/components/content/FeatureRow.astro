@@ -1,0 +1,110 @@
+---
+import type { HTMLAttributes, SvgComponent } from "astro/types";
+import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
+import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
+import Heading from "@/components/typography/Heading.astro";
+import Paragraph from "@/components/typography/Paragraph.astro";
+import Button from "@/components/Button.astro";
+import Icon from "@/components/media/Icon.astro";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+  /** Heading text. */
+  heading: string;
+  /** Supporting text under the heading. */
+  text?: string;
+  /** Imported SVG. Omit to render nothing. */
+  icon?: SvgComponent;
+  /** Button label. Omit to render no button. */
+  buttonText?: string;
+  /** Button destination. */
+  buttonHref?: string;
+};
+
+const {
+  render = true,
+  heading,
+  text,
+  icon,
+  buttonText,
+  buttonHref = "/contact",
+  class: className,
+  ...rest
+} = Astro.props;
+
+const visual = await slotContent(Astro.slots);
+---
+
+{
+  render && heading && (
+    <ContentWrapper
+      variant="columns"
+      class={["feature-row_wrap", className].filter(Boolean).join(" ")}
+      {...rest}
+    >
+      {icon && (
+        <div class="feature-row_badge" data-motion="pop">
+          <Icon src={icon} />
+        </div>
+      )}
+      <Heading tag="h3" variant="h4" data-motion="lines">
+        {heading}
+      </Heading>
+      <Paragraph
+        class="feature-row_text"
+        variant="large"
+        maxWidth={42}
+        data-motion="rise"
+      >
+        {text}
+      </Paragraph>
+      {buttonText && (
+        <ButtonWrapper data-motion="rise">
+          <Button element="link" href={buttonHref} emphasis="secondary">
+            {buttonText}
+          </Button>
+        </ButtonWrapper>
+      )}
+      <Fragment slot="column2" set:html={visual} />
+    </ContentWrapper>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .feature-row_wrap.layout.columns {
+      row-gap: var(--space-6);
+      @media (width >= 64rem) {
+        grid-template-columns: minmax(0, 29rem) minmax(0, 25.875rem);
+        justify-content: space-between;
+      }
+    }
+
+    .feature-row_badge {
+      display: grid;
+      place-items: center;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--background-3);
+      border-radius: var(--radius-round);
+      color: var(--neutral-700);
+      & + .heading {
+        margin-top: var(--space-3);
+      }
+      & .icon {
+        transition: transform 300ms cubic-bezier(0.2, 0.7, 0.2, 1);
+      }
+      @media (hover: hover) {
+        .feature-row_wrap:hover & .icon {
+          transform: rotate(-10deg) scale(1.12);
+        }
+      }
+    }
+
+    .feature-row_text {
+      color: var(--text-2);
+    }
+  }
+</style>

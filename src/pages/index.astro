@@ -1,41 +1,383 @@
 ---
 import Layout from "@/layouts/BaseLayout.astro";
-import Section from "@/components/wrapper/Section.astro";
-import Heading from "@/components/typography/Heading.astro";
-import Eyebrow from "@/components/typography/Eyebrow.astro";
-import Img from "@/components/media/Img.astro";
-import lumos_background from "@/assets/graphics/lumos-background.svg";
-import Icon from "@/components/media/Icon.astro";
-import logo_icon from "@/assets/logo/logo-icon.svg";
+import FeatureSteps from "@/components/section/FeatureSteps.astro";
 import ContentWrapper from "@/components/wrapper/ContentWrapper.astro";
+import Heading from "@/components/typography/Heading.astro";
+import HeroHome from "@/components/section/HeroHome.astro";
+import FeatureRow from "@/components/content/FeatureRow.astro";
+import FeatureGraphic from "@/components/content/FeatureGraphic.astro";
+import Section from "@/components/wrapper/Section.astro";
+import Card from "@/components/item/Card.astro";
+import BentoGrid from "@/components/content/BentoGrid.astro";
+import BentoGraphic from "@/components/content/BentoGraphic.astro";
+import MotionView from "@/components/utility/MotionView.astro";
+import StepTimeline from "@/components/content/StepTimeline.astro";
+import ProofGrid from "@/components/content/ProofGrid.astro";
+import IntegrationCard from "@/components/content/IntegrationCard.astro";
+import Accordion from "@/components/interactive/Accordion.astro";
+import AccordionItem from "@/components/interactive/AccordionItem.astro";
+import Paragraph from "@/components/typography/Paragraph.astro";
+import Grid from "@/components/wrapper/Grid.astro";
+import PostCard from "@/components/content/PostCard.astro";
+import CtaHome from "@/components/section/CtaHome.astro";
+import postFeatured from "@/assets/blog/post-featured.png";
+import postTeam from "@/assets/blog/post-team.png";
+import postWorkshop from "@/assets/blog/post-workshop.png";
+import postMeeting from "@/assets/blog/post-meeting.png";
+import ButtonWrapper from "@/components/wrapper/ButtonWrapper.astro";
+import Button from "@/components/Button.astro";
+import fileText from "@/assets/graphics/features/icon-file-text.svg";
+import clock from "@/assets/graphics/features/icon-clock.svg";
+import clipboardClock from "@/assets/graphics/features/icon-clipboard-clock.svg";
 ---
 
-<Layout theme="dark">
-  <Section
-    paddingBottom="even"
-    containerClass="flex-grow"
-    paddingTop="even"
-    class="flex-grow"
-    style="min-height: calc(100svh - var(--nav-height));"
-  >
-    <ContentWrapper
-      class="flex-grow theme-brand"
-      variant="card"
-      mediaOpacity={100}
-    >
-      <Icon src={logo_icon} variant="large" />
-      <Heading variant="display" tag="h1" class="margin-block-8"
-        >Style Guide</Heading
+<Layout title="The AI backbone for financial workflows" overlap>
+  {/* Hero */}
+  <HeroHome
+    heading="The AI backbone for financial workflows."
+    text="Unify compliance, approvals, and automation in one financial platform which is built to help you launch and scale securely."
+  />
+
+  {/* Features */}
+  <FeatureSteps>
+    <ContentWrapper slot="intro" centered>
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
       >
-      <Eyebrow variant="tag">v0.0.4</Eyebrow>
-      <Img
-        slot="column2"
-        src={lumos_background}
-        width={1920}
-        height={1080}
-        loading="eager"
-        fetchPriority="high"
-      />
+        <strong>Financial workflow controls</strong> that always run on autopilot.
+      </Heading>
     </ContentWrapper>
+    <FeatureRow
+      heading="Set up smarter policy controls for transactions"
+      text="Create approval flows once and let AI enforce them in real time — no chasing, no manual checks."
+      icon={fileText}
+      buttonText="Try Acerna Today"
+    >
+      <FeatureGraphic variant="policy" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Real-time security built into every transaction."
+      text="Every payment auto-tracked and compliant — tax, policy, and approvals handled instantly."
+      icon={clock}
+      buttonText="Book A Demo"
+    >
+      <FeatureGraphic variant="checkout" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Simplified, automated checkout experience"
+      text="Vendor bills and purchases processed safely before payments clear."
+      icon={clipboardClock}
+      buttonText="Talk With Our Team"
+    >
+      <FeatureGraphic variant="payment" />
+    </FeatureRow>
+    <FeatureRow
+      heading="Ensure every launch is compliance-ready"
+      text="Expand confidently — every campaign and region stays regulation-aligned."
+      icon={clipboardClock}
+      buttonText="Schedule a Demo"
+    >
+      <FeatureGraphic variant="compliance" />
+    </FeatureRow>
+  </FeatureSteps>
+
+  {/* Bento */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        Where <strong>financial compliance</strong> meets workflow confidence.
+      </Heading>
+    </ContentWrapper>
+    <BentoGrid>
+      <Card
+        variant="graphic"
+        heading="Access &amp; Payouts"
+        text="Automate, track, reconcile — from one smart dashboard."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="access" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Workflow Process Automation"
+        text="Reduce approvals by 80% as AI handles routine tasks."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="workflow" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Launch Compliance"
+        text="Approved markets, only."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="launch" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Anxiety-free Growth"
+        text="Get live compliance insights."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="growth" />
+      </Card>
+      <Card
+        variant="graphic"
+        heading="Unified System"
+        text="Workflows, payments, unified."
+        data-motion-scope="view"
+        data-motion="rise"
+      >
+        <BentoGraphic variant="unified" />
+      </Card>
+    </BentoGrid>
   </Section>
+
+  {/* How it works */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        Here’s what you can get done with acerna in <strong>4 weeks</strong>
+      </Heading>
+    </ContentWrapper>
+    <StepTimeline
+      steps={[
+        {
+          label: "Today",
+          heading: "Get started",
+          points: [
+            "Connect your finance tools",
+            "Import your existing policies",
+            "Invite your approvers",
+            "Map your first workflow",
+          ],
+        },
+        {
+          label: "Week 2",
+          heading: "Get comfortable",
+          points: [
+            "Automate routine approvals",
+            "Flag risky transactions",
+            "Reconcile payouts daily",
+            "Track every exception",
+          ],
+        },
+        {
+          label: "Week 4",
+          heading: "Easier to switch",
+          points: [
+            "Retire manual checks",
+            "Launch in new markets",
+            "Export audit-ready reports",
+            "Scale without extra headcount",
+          ],
+        },
+      ]}
+    />
+  </Section>
+
+  {/* Proof */}
+  <Section class="background-2" containerClass="max-width-wide">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading
+        class="heading-accent"
+        variant="h3"
+        maxWidth={30}
+        data-motion="lines"
+      >
+        <strong>Proven financial workflow</strong> across every platform
+      </Heading>
+      <ButtonWrapper data-motion="pop">
+        <Button element="link" href="/contact">Book a Consultation</Button>
+      </ButtonWrapper>
+    </ContentWrapper>
+    <ProofGrid>
+      <Card
+        variant="quote"
+        text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+        cite="– Annia Mirza, Co-founder, Crestline Finance"
+        buttonLabel="Read Case Study"
+        buttonHref="/case-studies"
+        accent
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Card
+        variant="stat"
+        value="80%"
+        heading="Reduction in QA costs"
+        text="in 3 months"
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Fragment slot="column2">
+        <Card
+          variant="stat"
+          value="30%"
+          heading="Reduction in QA costs"
+          text="in 3 months"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+        <Card
+          variant="quote"
+          text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+          cite="– Annia Mirza, Co-founder, Crestline Finance"
+          buttonLabel="Read Case Study"
+          buttonHref="/case-studies"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+      </Fragment>
+      <Fragment slot="column3">
+        <Card
+          variant="quote"
+          text="I wanted an AI-based call tracking service that would predict sales and provide feedback on my calls to increase my revenue, and I found just that in Acerna."
+          cite="– Annia Mirza, Co-founder, Crestline Finance"
+          buttonLabel="Read Case Study"
+          buttonHref="/case-studies"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+        <Card
+          variant="stat"
+          value="25%"
+          heading="Reduction in QA costs"
+          text="in 3 months"
+          data-motion-scope="view"
+          data-motion="rise"
+        />
+      </Fragment>
+    </ProofGrid>
+  </Section>
+
+  {/* Integrations */}
+  <Section containerClass="max-width-wide">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Discover All Connections</Heading>
+    </ContentWrapper>
+    <IntegrationCard
+      heading="One place to plan smarter, track better, and pay easier."
+      points={[
+        "Monitor service costs in real-time",
+        "Automate and schedule payments",
+        "Manage all vendors and integrations, seamlessly",
+      ]}
+      buttonText="Explore All Integrations"
+    />
+  </Section>
+
+  {/* FAQ */}
+  <Section containerClass="max-width-small" gap="7">
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Frequently Asked Questions</Heading>
+    </ContentWrapper>
+    <Accordion openFirst data-motion-scope="view">
+      <AccordionItem heading="What is Acerna and how does it help my business?" variant="card" data-motion="rise">
+        <Paragraph>
+          Acerna is a financial workflow management platform that simplifies how teams handle budgets, approvals, and expense tracking. It brings finance, operations, and management together in one seamless system—saving time, reducing manual errors, and improving transparency across teams.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Who is Acerna designed for?" variant="card" data-motion="rise">
+        <Paragraph>
+          Acerna is built for finance and operations teams at growing companies that have outgrown spreadsheets and email approvals. It suits anyone who needs clear control over spending without slowing their team down.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Can Acerna integrate with our existing tools and systems?" variant="card" data-motion="rise">
+        <Paragraph>
+          Yes. Acerna connects with common accounting, banking, and payment tools, so your data stays in sync and your team keeps working in the systems they already know.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="How long does it take to get started?" variant="card" data-motion="rise">
+        <Paragraph>
+          Most teams connect their tools and map a first workflow on day one, and are running routine approvals automatically within four weeks.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="How does Acerna keep our financial data secure?" variant="card" data-motion="rise">
+        <Paragraph>
+          Every action is checked against your policies and recorded in an audit trail. Access is limited by role, so people only see and approve what they are responsible for.
+        </Paragraph>
+      </AccordionItem>
+      <AccordionItem heading="Can we change our approval workflows later?" variant="card" data-motion="rise">
+        <Paragraph>
+          Yes. Workflows are yours to edit at any time. Update a rule once and it applies to every new transaction from that point on.
+        </Paragraph>
+      </AccordionItem>
+    </Accordion>
+  </Section>
+
+  {/* Blog */}
+  <Section>
+    <ContentWrapper centered data-motion-scope="view">
+      <Heading variant="h3" data-motion="lines">Featured in the Blog</Heading>
+    </ContentWrapper>
+    <Grid large={2} class="gap-4">
+      <PostCard
+        heading="From strategy to supplier without losing context"
+        text="Discover how workflow automation is transforming financial operations, boosting speed, accuracy, and compliance for modern institutions."
+        href="/blog"
+        image={postFeatured}
+        readTime="12 min read"
+        date={new Date("2024-10-24")}
+        data-motion-scope="view"
+        data-motion="rise"
+      />
+      <Grid class="gap-3">
+        <PostCard
+          variant="compact"
+          heading="Closing the books in half the time"
+          href="/blog"
+          image={postTeam}
+          readTime="8 min read"
+          date={new Date("2024-10-17")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+        <PostCard
+          variant="compact"
+          heading="What auditors look for in an approval trail"
+          href="/blog"
+          image={postWorkshop}
+          readTime="6 min read"
+          date={new Date("2024-10-09")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+        <PostCard
+          variant="compact"
+          heading="Five signs your payout process needs automation"
+          href="/blog"
+          image={postMeeting}
+          readTime="10 min read"
+          date={new Date("2024-09-30")}
+          data-motion-scope="view"
+          data-motion="slide"
+        />
+      </Grid>
+    </Grid>
+  </Section>
+
+  {/* CTA */}
+  <CtaHome
+    heading="Ready to put your financial workflows on autopilot?"
+    buttonText="Contact Sales"
+  />
+  <MotionView />
 </Layout>

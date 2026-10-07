@@ -34,6 +34,10 @@ const {
       z-index: 100;
       translate: 0 calc(-100% - var(--space-2) * 2);
 
+      &:not(:focus) {
+        box-shadow: none;
+      }
+
       &:focus {
         translate: 0 0;
       }

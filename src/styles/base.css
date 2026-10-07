@@ -61,10 +61,11 @@
   /* Max width */
   --max-width-small: 45rem;
   --max-width-main: 60rem;
+  --max-width-wide: 65rem;
   --max-width-full: 100%;
 
   /* Nav */
-  --nav-height: 5rem;
+  --nav-height: 4.5rem;
 
   /* Typography styles */
   --display: clamp(var(--display-min) / 16 * 1rem, ((var(--display-min) - ((var(--display-max) - var(--display-min)) / (var(--viewport-max) - var(--viewport-min)) * var(--viewport-min))) / 16 * 1rem + ((var(--display-max) - var(--display-min)) / (var(--viewport-max) - var(--viewport-min))) * 100vw), var(--display-max) / 16 * 1rem);
@@ -277,19 +278,25 @@
   --selection-background: var(--text);
   --selection-text: var(--background);
 
-  --button-background: var(--orange-500);
-  --button-border: var(--button-background);
-  --button-text: var(--neutral-1000);
-  --button-background-hover: var(--text);
-  --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--background);
+  --button-shadow-color: var(--neutral-700);
 
-  --button-2-background: transparent;
-  --button-2-border: var(--border);
-  --button-2-text: var(--text);
-  --button-2-background-hover: var(--text);
-  --button-2-border-hover: var(--button-2-background-hover);
-  --button-2-text-hover: var(--background);
+  --button-background: var(--orange-500);
+  --button-fill: linear-gradient(155deg, var(--orange-300) 28%, var(--orange-500) 75%);
+  --button-border: color-mix(in lab, var(--button-shadow-color) 12%, transparent);
+  --button-text: var(--neutral-1000);
+  --button-background-hover: var(--orange-500);
+  --button-fill-hover: linear-gradient(155deg, var(--orange-500) 13%, color-mix(in lab, var(--orange-500), var(--orange-700)) 82%);
+  --button-border-hover: var(--button-border);
+  --button-text-hover: var(--button-text);
+
+  --button-2-background: var(--background);
+  --button-2-fill: none;
+  --button-2-border: color-mix(in lab, var(--button-shadow-color) 12%, transparent);
+  --button-2-text: var(--neutral-700);
+  --button-2-background-hover: var(--background-2);
+  --button-2-fill-hover: none;
+  --button-2-border-hover: var(--button-2-border);
+  --button-2-text-hover: var(--neutral-800);
 
   --link-text: var(--text);
   --link-border: var(--border);
@@ -313,17 +320,23 @@
   --selection-background: var(--text);
   --selection-text: var(--background);
 
+  --button-shadow-color: transparent;
+
   --button-background: var(--orange-500);
-  --button-border: var(--button-background);
+  --button-fill: linear-gradient(155deg, var(--orange-300) 28%, var(--orange-500) 75%);
+  --button-border: transparent;
   --button-text: var(--neutral-1000);
-  --button-background-hover: var(--text);
-  --button-border-hover: var(--button-background-hover);
-  --button-text-hover: var(--background);
+  --button-background-hover: var(--orange-500);
+  --button-fill-hover: linear-gradient(155deg, var(--orange-500) 13%, color-mix(in lab, var(--orange-500), var(--orange-700)) 82%);
+  --button-border-hover: var(--button-border);
+  --button-text-hover: var(--button-text);
 
   --button-2-background: transparent;
+  --button-2-fill: none;
   --button-2-border: var(--border);
   --button-2-text: var(--text);
   --button-2-background-hover: var(--text);
+  --button-2-fill-hover: none;
   --button-2-border-hover: var(--button-2-background-hover);
   --button-2-text-hover: var(--background);
 
@@ -348,17 +361,23 @@
   --selection-background: var(--text);
   --selection-text: var(--background);
 
+  --button-shadow-color: var(--neutral-1000);
+
   --button-background: var(--neutral-1000);
+  --button-fill: none;
   --button-border: var(--button-background);
   --button-text: var(--background);
   --button-background-hover: var(--white);
+  --button-fill-hover: none;
   --button-border-hover: var(--button-background-hover);
   --button-text-hover: var(--neutral-1000);
 
   --button-2-background: transparent;
+  --button-2-fill: none;
   --button-2-border: var(--border);
   --button-2-text: var(--text);
   --button-2-background-hover: var(--white);
+  --button-2-fill-hover: none;
   --button-2-border-hover: var(--button-2-background-hover);
   --button-2-text-hover: var(--neutral-1000);
 

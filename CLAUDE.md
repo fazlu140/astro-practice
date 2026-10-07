@@ -67,5 +67,13 @@ Default theme: white background, neutral-1000 text, neutral-800 muted text, oran
 - Never commit to `main`. Work on the branch I've checked out. If I'm on `main`, stop and tell me.
 - Before building anything, show a short plan and wait for my approval.
 - Small commits with clear messages. Don't push, I push.
-- I run the dev server myself in another terminal at localhost:4321. Don't start a second one.
+- Before starting the dev server, check `astro dev status`. If it isn't running, start it with `astro dev --background` and give me the localhost link.
 - Don't run `npm audit fix` and don't upgrade Astro or Lumos.
+
+## Teaching
+
+- I'm learning the terminal, Git and Astro as we go.
+- Before running any command, explain in one line what it does.
+- After each task, give me a short lesson: what changed, why, and the Webflow equivalent where one exists.
+- When I ask a question mid-task, answer it fully before continuing.
+- Keep lessons short unless I ask for more.

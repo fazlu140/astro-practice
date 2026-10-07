@@ -1,0 +1,926 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import Img from "@/components/media/Img.astro";
+import cart from "@/assets/graphics/bento/cart.svg";
+import bolt from "@/assets/graphics/bento/bolt.svg";
+import lock from "@/assets/graphics/bento/lock.svg";
+import stripe from "@/assets/graphics/bento/stripe.svg";
+import alert from "@/assets/graphics/bento/alert.svg";
+import logo from "@/assets/graphics/bento/logo.svg";
+import connectorLeft from "@/assets/graphics/bento/connector-left.svg";
+import connectorRight from "@/assets/graphics/bento/connector-right.svg";
+import areaBack from "@/assets/graphics/bento/area-back.svg";
+import areaFront from "@/assets/graphics/bento/area-front.svg";
+import lineBack from "@/assets/graphics/bento/line-back.svg";
+import lineFront from "@/assets/graphics/bento/line-front.svg";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+  /** Which mock interface to draw. */
+  variant: "access" | "workflow" | "launch" | "growth" | "unified";
+};
+
+const { render = true, variant, class: className, ...rest } = Astro.props;
+
+const rules = ["Verified accounts only", "No exceeding daily drawdown"];
+const lanes = [0, 1, 2, 3];
+const tiles = [bolt, bolt, bolt, lock, bolt, bolt, bolt];
+const payments = [true, true, false, false];
+const tasks = [
+  { name: "Grace Michigan Marie", checked: true, done: false },
+  { name: "Grace Michigan Marie", checked: false, done: false },
+  { name: "", checked: false, done: true },
+  { name: "", checked: false, done: true },
+  { name: "", checked: true, done: false },
+  { name: "", checked: false, done: true },
+];
+---
+
+{
+  render && variant && (
+    <div
+      class:list={["bento-graphic_wrap", variant, className]}
+      aria-hidden="true"
+      {...rest}
+    >
+      {variant === "access" && (
+        <div class="bento-graphic_board">
+          {lanes.map((lane) => (
+            <div class="bento-graphic_lane" style={`--_i: ${lane}`}>
+              <div class="bento-graphic_rules">
+                {[...rules, ...rules, ...rules, ...rules].map((rule) => (
+                  <span class="bento-graphic_rule">
+                    <span class="bento-graphic_minus">-</span>
+                    {rule}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div class="bento-graphic_thread" data-motion="draw" />
+          <div class="bento-graphic_card bento-graphic_cart" data-motion="rise">
+            <div class="bento-graphic_line between">
+              <span class="bento-graphic_title">
+                <Img src={cart} width={21} height={21} transparent />
+                Cart
+              </span>
+              <span class="bento-graphic_light settled" />
+            </div>
+          </div>
+          <div class="bento-graphic_card bento-graphic_pay" data-motion="rise">
+            <div class="bento-graphic_line between">
+              <span class="bento-graphic_title">
+                <Img src={bolt} width={22} height={22} transparent />
+                Instant Payment
+              </span>
+              <span class="bento-graphic_light settled" />
+            </div>
+            <div class="bento-graphic_box">
+              {payments.map((settled, index) => (
+                <div class="bento-graphic_line between" data-motion="lift">
+                  {index === 0 ? (
+                    <Img
+                      class="bento-graphic_stripe"
+                      src={stripe}
+                      width={34}
+                      height={24}
+                      transparent
+                    />
+                  ) : (
+                    <span class="bento-graphic_block" />
+                  )}
+                  <span class="bento-graphic_line">
+                    {index === 0 ? (
+                      <span class="bento-graphic_amount">$12.00</span>
+                    ) : (
+                      <span class="bento-graphic_bar" style="--_w: 56" />
+                    )}
+                    <span
+                      class:list={[
+                        "bento-graphic_light",
+                        "small",
+                        settled ? "settled" : "settling",
+                      ]}
+                      style={`--_i: ${index}`}
+                    />
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "workflow" && (
+        <div class="bento-graphic_board">
+          <div class="bento-graphic_tiles">
+            {tiles.map((tile, index) => (
+              <span
+                class="bento-graphic_tile"
+                style={`--_i: ${index}`}
+                data-motion="pop"
+              >
+                <Img src={tile} width={22} height={22} transparent />
+              </span>
+            ))}
+          </div>
+          <div class="bento-graphic_links" data-motion="fade">
+            <Img src={connectorLeft} width={61} height={29} transparent />
+            <span />
+            <Img src={connectorRight} width={61} height={31} transparent />
+          </div>
+          <div class="bento-graphic_card bento-graphic_table" data-motion="rise">
+            <div class="bento-graphic_line between">
+              <span class="bento-graphic_line">
+                <span class="bento-graphic_name">Launch - Fall Season 2025</span>
+                <span class="bento-graphic_pill">March 2025</span>
+              </span>
+              <span class="bento-graphic_bar faint" style="--_w: 48" />
+            </div>
+            <div class="bento-graphic_rows">
+              {tasks.map((task, index) => (
+                <div
+                  class:list={["bento-graphic_row", task.checked && "checked"]}
+                  style={`--_i: ${index}`}
+                  data-motion="lift"
+                >
+                  <span class="bento-graphic_check" />
+                  <span class="bento-graphic_cell">
+                    {task.name || (
+                      <span class="bento-graphic_bar" style="--_w: 100" />
+                    )}
+                  </span>
+                  <span class="bento-graphic_state">
+                    <span
+                      class:list={[
+                        "bento-graphic_tag",
+                        task.done ? "completed" : "processing",
+                      ]}
+                    >
+                      {task.done ? "Complete" : "Processing"}
+                    </span>
+                    {!task.done && (
+                      <span class="bento-graphic_tag completed">Complete</span>
+                    )}
+                  </span>
+                  <span class="bento-graphic_cell">
+                    {task.name || (
+                      <span class="bento-graphic_bar" style="--_w: 100" />
+                    )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "launch" && (
+        <div class="bento-graphic_board">
+          <div class="bento-graphic_stack">
+            <div class="bento-graphic_card" data-motion="rise" />
+            <div class="bento-graphic_card" data-motion="rise" />
+            <div class="bento-graphic_card" data-motion="rise">
+              <div class="bento-graphic_line">
+                <span class="bento-graphic_logo">
+                  <Img src={logo} width={43} height={33} transparent />
+                </span>
+                <div class="bento-graphic_body">
+                  <span class="bento-graphic_line">
+                    <strong class="bento-graphic_name">Stellar Solutions</strong>
+                    <span class="bento-graphic_pill">Vendor</span>
+                  </span>
+                  <span class="bento-graphic_bar" style="--_w: 166" />
+                  <span class="bento-graphic_bar" style="--_w: 93" />
+                  <span class="bento-graphic_chip" data-motion="pop">
+                    <Img src={alert} width={9} height={9} transparent />
+                    Blocked
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "growth" && (
+        <div class="bento-graphic_board">
+          <div class="bento-graphic_card bento-graphic_panel" data-motion="rise">
+            <span class="bento-graphic_bar faint" style="--_w: 151" />
+            <span class="bento-graphic_bar faint" style="--_w: 74" />
+            <div class="bento-graphic_plot">
+              <Img src={areaBack} width={229} height={66} transparent />
+              <Img src={areaFront} width={230} height={44} transparent />
+              <Img src={lineBack} width={230} height={21} transparent />
+              <Img src={lineFront} width={230} height={17} transparent />
+              <span class="bento-graphic_wipe" data-motion="wipe" />
+            </div>
+          </div>
+        </div>
+      )}
+      {variant === "unified" && (
+        <div class="bento-graphic_board">
+          <div class="bento-graphic_card bento-graphic_panel" data-motion="rise">
+            <div class="bento-graphic_line between">
+              <strong class="bento-graphic_person">Julia N. Clara</strong>
+              <span class="bento-graphic_tag completed" data-motion="pop">
+                Complete
+              </span>
+            </div>
+            <span class="bento-graphic_bar faint" style="--_w: 151" />
+            <span class="bento-graphic_bar faint" style="--_w: 74" />
+            <div class="bento-graphic_credit" data-motion="lift">
+              <div class="bento-graphic_line between">
+                <strong class="bento-graphic_name">Credit Details</strong>
+                <span class="bento-graphic_date">12/07/25</span>
+              </div>
+              <div class="bento-graphic_meter">
+                <span style="--_i: 0" />
+                <span style="--_i: 1" />
+                <span style="--_i: 2" />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+<style is:global>
+  @layer components {
+    /* Artboard */
+    .bento-graphic_wrap {
+      --_width: 253;
+      --_height: 140;
+      --_u: calc(100cqw / var(--_width));
+      --_completed: #157a66;
+      --_blocked: #cc2e46;
+      --_processing: #ad7e09;
+      --_ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+      container-type: inline-size;
+      width: 100%;
+      aspect-ratio: var(--_width) / var(--_height);
+      &:is(.access, .workflow) {
+        --_width: 416;
+        --_height: 285;
+      }
+    }
+
+    .bento-graphic_board {
+      position: relative;
+      display: grid;
+      place-items: center;
+      height: 100%;
+      color: var(--neutral-900);
+      font-size: calc(var(--_u) * 10.7);
+      font-weight: var(--primary-medium);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      :is(.access, .workflow) > & {
+        overflow: clip;
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          z-index: 2;
+          inset: 0 0 auto;
+          height: calc(var(--_u) * 24);
+          background-image: linear-gradient(
+            var(--background-3),
+            transparent
+          );
+        }
+        &::after {
+          inset: auto 0 0;
+          rotate: 180deg;
+        }
+      }
+    }
+
+    /* Shared parts */
+    .bento-graphic_card {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 8);
+      padding: calc(var(--_u) * 12);
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 12);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 4) var(--white),
+        0 calc(var(--_u) * 3) calc(var(--_u) * 6)
+          color-mix(in lab, var(--neutral-200) 60%, transparent),
+        0 calc(var(--_u) * 12) calc(var(--_u) * 24)
+          color-mix(in lab, var(--neutral-600) 14%, transparent),
+        0 calc(var(--_u) * 18) calc(var(--_u) * 36)
+          color-mix(in lab, var(--neutral-700) 10%, transparent);
+      transition: translate 350ms var(--_ease);
+    }
+
+    .bento-graphic_line {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 6);
+      &.between {
+        justify-content: space-between;
+      }
+    }
+
+    .bento-graphic_body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: calc(var(--_u) * 8);
+      min-width: 0;
+    }
+
+    .bento-graphic_title {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 8);
+      color: var(--neutral-1000);
+      font-size: calc(var(--_u) * 12);
+      & .image {
+        width: calc(var(--_u) * 21.5);
+        height: auto;
+      }
+    }
+
+    .bento-graphic_name {
+      color: var(--neutral-1000);
+      white-space: nowrap;
+    }
+
+    .bento-graphic_bar {
+      flex: none;
+      display: block;
+      width: calc(var(--_u) * var(--_w));
+      max-width: 100%;
+      height: calc(var(--_u) * 6);
+      background-color: var(--neutral-200);
+      border-radius: var(--radius-round);
+      &.faint {
+        opacity: 0.5;
+      }
+    }
+
+    .bento-graphic_pill {
+      padding: calc(var(--_u) * 4) calc(var(--_u) * 8);
+      background-color: var(--white);
+      border: var(--border-width) solid var(--border);
+      border-radius: var(--radius-round);
+      font-size: calc(var(--_u) * 8);
+      white-space: nowrap;
+    }
+
+    .bento-graphic_tag {
+      --_tone: var(--_processing);
+      padding: calc(var(--_u) * 3) calc(var(--_u) * 8);
+      background-color: var(--white);
+      background-image: linear-gradient(
+        color-mix(in lab, var(--_tone) 6%, transparent),
+        color-mix(in lab, var(--_tone) 18%, transparent)
+      );
+      border-radius: var(--radius-round);
+      color: var(--_tone);
+      font-size: calc(var(--_u) * 8.4);
+      line-height: 1.2;
+      white-space: nowrap;
+      &.completed {
+        --_tone: var(--_completed);
+      }
+    }
+
+    .bento-graphic_light {
+      --_tone: var(--_completed);
+      flex: none;
+      position: relative;
+      width: calc(var(--_u) * 15);
+      height: calc(var(--_u) * 15);
+      background-image: radial-gradient(
+        circle closest-side,
+        color-mix(in lab, var(--_tone) 70%, var(--white)) 56%,
+        color-mix(in lab, var(--_tone) 18%, var(--white)) 64%
+      );
+      border-radius: 50%;
+      &.small {
+        width: calc(var(--_u) * 14);
+        height: calc(var(--_u) * 14);
+      }
+      &.settling {
+        --_tone: var(--orange-500);
+        &::after {
+          --_tone: var(--_completed);
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(
+            circle closest-side,
+            color-mix(in lab, var(--_tone) 70%, var(--white)) 56%,
+            color-mix(in lab, var(--_tone) 18%, var(--white)) 64%
+          );
+          border-radius: inherit;
+          opacity: 0;
+        }
+      }
+    }
+
+    /* Access */
+    .bento-graphic_lane {
+      position: absolute;
+      top: calc(var(--_u) * (var(--_i) * 70 - 26));
+      left: 0;
+      opacity: 0.32;
+    }
+
+    .bento-graphic_rules {
+      display: flex;
+      gap: calc(var(--_u) * 16);
+      width: max-content;
+      padding-right: calc(var(--_u) * 16);
+      translate: calc(var(--_u) * (var(--_i) * -47 - 20)) 0;
+    }
+
+    .bento-graphic_rule {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 14);
+      padding: calc(var(--_u) * 14) calc(var(--_u) * 14) calc(var(--_u) * 14)
+        calc(var(--_u) * 18);
+      background-color: var(--white);
+      border: var(--border-width) solid var(--border);
+      border-radius: calc(var(--_u) * 10.5);
+      color: var(--neutral-1000);
+      font-size: calc(var(--_u) * 15.8);
+      line-height: 1.25;
+      white-space: nowrap;
+    }
+
+    .bento-graphic_minus {
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 24.6);
+      height: calc(var(--_u) * 24.6);
+      border: var(--border-width) solid var(--neutral-600);
+      border-radius: calc(var(--_u) * 4.4);
+    }
+
+    .bento-graphic_thread {
+      position: absolute;
+      top: 0;
+      left: calc(var(--_u) * 134);
+      width: calc(var(--_u) * 2);
+      height: calc(var(--_u) * 188);
+      background-color: var(--orange-300);
+      opacity: 0.5;
+    }
+
+    .bento-graphic_cart,
+    .bento-graphic_pay {
+      position: absolute;
+      top: calc(var(--_u) * 22.5);
+      left: calc(var(--_u) * 82);
+      width: calc(var(--_u) * 252);
+      padding-right: calc(var(--_u) * 20);
+    }
+
+    .bento-graphic_pay {
+      top: calc(var(--_u) * 98);
+      padding-right: calc(var(--_u) * 12);
+      & > .bento-graphic_line {
+        padding-right: calc(var(--_u) * 9);
+      }
+    }
+
+    .bento-graphic_box {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 7);
+      padding: calc(var(--_u) * 8);
+      border: var(--border-width) solid var(--border);
+      border-radius: calc(var(--_u) * 6);
+    }
+
+    .bento-graphic_stripe.image {
+      width: calc(var(--_u) * 34);
+      height: auto;
+    }
+
+    .bento-graphic_block {
+      width: calc(var(--_u) * 42);
+      height: calc(var(--_u) * 20);
+      background-color: var(--neutral-200);
+      border-radius: calc(var(--_u) * 4);
+    }
+
+    .bento-graphic_amount {
+      color: var(--neutral-800);
+      font-size: calc(var(--_u) * 12.5);
+    }
+
+    /* Workflow */
+    .bento-graphic_tiles {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      display: flex;
+      gap: calc(var(--_u) * 6);
+      translate: -50% 0;
+    }
+
+    .bento-graphic_tile {
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 46);
+      height: calc(var(--_u) * 46);
+      background-image: linear-gradient(var(--orange-50), var(--white));
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 12);
+      box-shadow:
+        inset 0 0 0 calc(var(--_u) * 4) var(--white),
+        0 calc(var(--_u) * 3) calc(var(--_u) * 6)
+          color-mix(in lab, var(--neutral-200) 60%, transparent);
+      & .image {
+        width: calc(var(--_u) * 22);
+        height: auto;
+        opacity: calc(
+          1 - max(0, max(var(--_i) - 3, 3 - var(--_i)) - 1) * 0.29
+        );
+      }
+    }
+
+    .bento-graphic_links {
+      position: absolute;
+      top: calc(var(--_u) * 46);
+      left: calc(var(--_u) * 134);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      width: calc(var(--_u) * 149);
+      & .image {
+        width: calc(var(--_u) * 60);
+        height: calc(var(--_u) * 30);
+      }
+      & .image:last-child {
+        transform: scaleX(-1);
+      }
+      & span {
+        width: var(--border-width);
+        height: calc(var(--_u) * 30);
+        background-color: var(--border);
+      }
+    }
+
+    .bento-graphic_table {
+      position: absolute;
+      top: calc(var(--_u) * 76);
+      left: calc(var(--_u) * 30);
+      width: calc(var(--_u) * 355);
+    }
+
+    .bento-graphic_row {
+      display: flex;
+      align-items: center;
+      height: calc(var(--_u) * 29);
+      border-bottom: var(--border-width) solid var(--border);
+      color: var(--neutral-800);
+      font-size: calc(var(--_u) * 10);
+      white-space: nowrap;
+      &.checked {
+        background-color: var(--orange-50);
+      }
+    }
+
+    .bento-graphic_check {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 12);
+      height: calc(var(--_u) * 12);
+      margin-inline: calc(var(--_u) * 6);
+      background-color: var(--white);
+      border: var(--border-width) solid var(--neutral-600);
+      border-radius: calc(var(--_u) * 3.4);
+      .checked > & {
+        background-color: var(--orange-700);
+        border-color: var(--orange-700);
+        &::after {
+          content: "";
+          width: 28%;
+          height: 55%;
+          margin-top: -15%;
+          border: solid var(--white);
+          border-width: 0 calc(var(--_u) * 1.4) calc(var(--_u) * 1.4) 0;
+          rotate: 45deg;
+        }
+      }
+    }
+
+    .bento-graphic_cell {
+      flex: 1;
+      padding-inline: calc(var(--_u) * 12);
+      overflow: clip;
+    }
+
+    .bento-graphic_state {
+      flex: none;
+      display: grid;
+      justify-items: start;
+      width: calc(var(--_u) * 68);
+      & > * {
+        grid-area: 1 / 1;
+      }
+      & > :nth-child(2) {
+        opacity: 0;
+      }
+    }
+
+    /* Launch */
+    .bento-graphic_stack {
+      position: relative;
+      width: 100%;
+      height: calc(var(--_u) * 115);
+      & > * {
+        position: absolute;
+        top: 0;
+        left: calc(var(--_u) * 34);
+        width: calc(var(--_u) * 185);
+        height: calc(var(--_u) * 74);
+        border-radius: calc(var(--_u) * 16);
+      }
+      & > :nth-child(2) {
+        top: calc(var(--_u) * 9.4);
+        left: calc(var(--_u) * 13);
+        width: calc(var(--_u) * 228);
+      }
+      & > :nth-child(3) {
+        top: calc(var(--_u) * 17.9);
+        left: 0;
+        justify-content: center;
+        width: calc(var(--_u) * 253);
+        height: calc(var(--_u) * 97);
+      }
+      & .bento-graphic_line {
+        gap: calc(var(--_u) * 14);
+      }
+      & .bento-graphic_line .bento-graphic_line {
+        gap: calc(var(--_u) * 4);
+      }
+    }
+
+    .bento-graphic_logo {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: calc(var(--_u) * 67);
+      height: calc(var(--_u) * 73);
+      background-color: var(--orange-50);
+      border: var(--border-width) solid var(--orange-100);
+      border-radius: calc(var(--_u) * 8);
+      & .image {
+        width: calc(var(--_u) * 43);
+        height: auto;
+        transition: rotate 350ms var(--_ease);
+      }
+    }
+
+    .bento-graphic_chip {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--_u) * 4);
+      padding: calc(var(--_u) * 4) calc(var(--_u) * 9);
+      background-image: linear-gradient(
+        transparent 24%,
+        color-mix(in lab, var(--_blocked) 22%, transparent)
+      );
+      border: var(--border-width) solid
+        color-mix(in lab, var(--_blocked) 28%, transparent);
+      border-radius: var(--radius-round);
+      color: var(--_blocked);
+      font-size: calc(var(--_u) * 10.3);
+      line-height: 1;
+      & .image {
+        width: calc(var(--_u) * 9);
+        height: auto;
+      }
+    }
+
+    /* Growth and unified */
+    .bento-graphic_panel {
+      gap: calc(var(--_u) * 5.5);
+      width: calc(var(--_u) * 253);
+      border-radius: calc(var(--_u) * 16);
+    }
+
+    .bento-graphic_plot {
+      position: relative;
+      height: calc(var(--_u) * 78);
+      margin-top: calc(var(--_u) * 5.5);
+      & .image {
+        position: absolute;
+        left: 0;
+        width: 100%;
+      }
+      & > :nth-child(1) {
+        top: calc(var(--_u) * 12);
+        height: calc(var(--_u) * 66.3);
+      }
+      & > :nth-child(2) {
+        top: calc(var(--_u) * 34.7);
+        height: calc(var(--_u) * 43.6);
+      }
+      & > :nth-child(3) {
+        top: calc(var(--_u) * 11.3);
+        height: calc(var(--_u) * 20);
+      }
+      & > :nth-child(4) {
+        top: calc(var(--_u) * 34.9);
+        height: calc(var(--_u) * 16.3);
+      }
+    }
+
+    .bento-graphic_wipe,
+    .bento-graphic_plot::after {
+      position: absolute;
+      inset: 0;
+      background-color: var(--white);
+      transform-origin: right;
+    }
+
+    .bento-graphic_wipe {
+      opacity: 0;
+    }
+
+    .bento-graphic_plot::after {
+      content: "";
+      scale: 0 1;
+    }
+
+    .bento-graphic_person {
+      color: var(--neutral-1000);
+      font-size: calc(var(--_u) * 14);
+      font-weight: var(--primary-bold);
+    }
+
+    .bento-graphic_credit {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--_u) * 16);
+      margin-top: calc(var(--_u) * 6.5);
+      padding: calc(var(--_u) * 10);
+      background-color: var(--white);
+      border: var(--border-width) dashed var(--neutral-600);
+      border-radius: calc(var(--_u) * 6);
+      font-size: calc(var(--_u) * 10);
+      & strong {
+        font-weight: var(--primary-bold);
+      }
+    }
+
+    .bento-graphic_date {
+      padding: calc(var(--_u) * 2) calc(var(--_u) * 6);
+      background-color: var(--neutral-100);
+      border-radius: calc(var(--_u) * 4);
+      color: var(--neutral-800);
+      font-size: calc(var(--_u) * 9);
+    }
+
+    .bento-graphic_meter {
+      display: flex;
+      gap: calc(var(--_u) * 4);
+      width: calc(var(--_u) * 132);
+      & span {
+        flex: 1;
+        height: calc(var(--_u) * 5);
+        overflow: clip;
+        background-color: var(--neutral-200);
+        border-radius: var(--radius-round);
+        &::after {
+          content: "";
+          display: block;
+          height: 100%;
+          background-color: var(--orange-300);
+          transform-origin: left;
+          scale: 0 1;
+        }
+        &:first-child::after {
+          scale: 1;
+        }
+      }
+    }
+
+    /* Loops */
+    .bento-graphic_wrap {
+      @media (prefers-reduced-motion: no-preference) {
+        & .bento-graphic_rules {
+          animation: bento-graphic-drift 40s linear infinite;
+        }
+        & .bento-graphic_lane:nth-child(even) .bento-graphic_rules {
+          animation-direction: reverse;
+        }
+        & .bento-graphic_light.settling::after {
+          animation: bento-graphic-settle 7s calc(var(--_i) * 900ms) infinite;
+        }
+        & .bento-graphic_tile .image {
+          animation: bento-graphic-glint 4.9s calc(var(--_i) * 350ms) infinite;
+        }
+        & .bento-graphic_state > :nth-child(2) {
+          animation: bento-graphic-settle 9s calc(var(--_i) * 700ms + 1s)
+            infinite;
+        }
+        & .bento-graphic_meter span:not(:first-child)::after {
+          animation: bento-graphic-fill 6s calc(var(--_i) * 1.2s)
+            var(--_ease) infinite;
+        }
+      }
+    }
+
+    /* Hover */
+    .card_wrap {
+      @media (hover: hover) {
+        &:hover .bento-graphic_rules {
+          animation-duration: 14s;
+        }
+        &:hover .bento-graphic_cart {
+          translate: 0 calc(var(--_u) * -4);
+        }
+        &:hover .bento-graphic_pay,
+        &:hover .bento-graphic_table,
+        &:hover .bento-graphic_panel {
+          translate: 0 calc(var(--_u) * -5);
+        }
+        &:hover .bento-graphic_stack > :nth-child(1) {
+          translate: 0 calc(var(--_u) * -9);
+        }
+        &:hover .bento-graphic_stack > :nth-child(2) {
+          translate: 0 calc(var(--_u) * -4);
+        }
+        &:hover .bento-graphic_stack > :nth-child(3) {
+          translate: 0 calc(var(--_u) * 3);
+        }
+        &:hover .bento-graphic_logo .image {
+          rotate: -8deg;
+        }
+        &:hover .bento-graphic_plot::after {
+          animation: bento-graphic-redraw 1.1s var(--_ease);
+        }
+      }
+    }
+
+    @keyframes bento-graphic-drift {
+      to {
+        translate: calc(var(--_u) * (var(--_i) * -47 - 20) - 50%) 0;
+      }
+    }
+
+    @keyframes bento-graphic-settle {
+      0%,
+      12% {
+        opacity: 0;
+      }
+      20%,
+      86% {
+        opacity: 1;
+      }
+      94%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes bento-graphic-glint {
+      0%,
+      14%,
+      100% {
+        scale: 1;
+      }
+      7% {
+        scale: 1.25;
+      }
+    }
+
+    @keyframes bento-graphic-fill {
+      0%,
+      10% {
+        scale: 0 1;
+      }
+      30%,
+      85% {
+        scale: 1 1;
+      }
+      95%,
+      100% {
+        scale: 0 1;
+      }
+    }
+
+    @keyframes bento-graphic-redraw {
+      from {
+        scale: 1 1;
+      }
+      to {
+        scale: 0 1;
+      }
+    }
+  }
+</style>

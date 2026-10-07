@@ -1,0 +1,152 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import Paragraph from "@/components/typography/Paragraph.astro";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+};
+
+const { render = true, class: className, ...rest } = Astro.props;
+
+const caption = await slotContent(Astro.slots);
+const logos = await slotContent(Astro.slots, "logos");
+
+const images = logos?.match(/<img[^>]*>/g) ?? [];
+const decorative = (image: string) =>
+  image.replace(/alt="[^"]*"/, 'alt="" aria-hidden="true"');
+const slots = images.map((image, index) => [
+  image,
+  decorative(images[images.length - 1 - index]),
+]);
+---
+
+{
+  render && logos && (
+    <div class:list={["logo-strip_wrap", "margin-trim", className]} {...rest}>
+      {caption && (
+        <Paragraph variant="large" class="logo-strip_caption">
+          <Fragment set:html={caption} />
+        </Paragraph>
+      )}
+      <div class="logo-strip_list">
+        {slots.map(([first, second], index) => (
+          <div class="logo-strip_slot" style={`--_i: ${index}`}>
+            <Fragment set:html={first} />
+            <Fragment set:html={second} />
+          </div>
+        ))}
+        {!slots.length && <Fragment set:html={logos} />}
+      </div>
+    </div>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .logo-strip_wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-5);
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo-strip_caption {
+      color: var(--text-2);
+      & strong {
+        font-weight: var(--primary-bold);
+      }
+    }
+
+    .logo-strip_list {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-5) var(--space-6);
+      width: 100%;
+      max-width: 52rem;
+      @media (width >= 48rem) {
+        justify-content: space-between;
+      }
+      & > .image {
+        flex: none;
+        width: auto;
+      }
+      @media (hover: hover) {
+        &:hover > .logo-strip_slot:not(:hover) {
+          opacity: 0.45;
+        }
+      }
+    }
+
+    .logo-strip_slot {
+      flex: none;
+      display: grid;
+      place-items: center;
+      min-height: 2.5rem;
+      overflow: clip;
+      transition: opacity 300ms var(--hover-ease);
+      & > .image {
+        grid-area: 1 / 1;
+        width: auto;
+      }
+      & > :last-child {
+        opacity: 0;
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        & > .image {
+          animation: logo-strip-first 9s calc(var(--_i) * 180ms + 2.5s) infinite;
+        }
+        & > :last-child {
+          animation-name: logo-strip-second;
+        }
+      }
+    }
+
+    @keyframes logo-strip-first {
+      0%,
+      44% {
+        opacity: 1;
+        translate: 0 0;
+        animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      }
+      50% {
+        opacity: 0;
+        translate: 0 -110%;
+      }
+      50.01%,
+      94% {
+        opacity: 0;
+        translate: 0 110%;
+        animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      }
+      100% {
+        opacity: 1;
+        translate: 0 0;
+      }
+    }
+
+    @keyframes logo-strip-second {
+      0%,
+      44% {
+        opacity: 0;
+        translate: 0 110%;
+        animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      }
+      50%,
+      94% {
+        opacity: 1;
+        translate: 0 0;
+        animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1);
+      }
+      100% {
+        opacity: 0;
+        translate: 0 -110%;
+      }
+    }
+  }
+</style>

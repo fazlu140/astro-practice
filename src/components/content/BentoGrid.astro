@@ -1,0 +1,41 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = HTMLAttributes<"div"> & {
+  /** Set to `false` to omit the component. */
+  render?: boolean;
+};
+
+const { render = true, class: className, ...rest } = Astro.props;
+
+const content = await slotContent(Astro.slots);
+---
+
+{
+  render && content && (
+    <div class:list={["bento-grid_wrap", className]} {...rest}>
+      <Fragment set:html={content} />
+    </div>
+  )
+}
+
+<style is:global>
+  @layer components {
+    .bento-grid_wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--site-gutter);
+      width: 100%;
+      @media (width >= 48rem) {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        & > * {
+          grid-column: span 2;
+        }
+        & > :nth-child(-n + 2) {
+          grid-column: span 3;
+        }
+      }
+    }
+  }
+</style>

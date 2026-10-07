@@ -1,0 +1,241 @@
+---
+import type { ComponentProps } from "astro/types";
+import Section from "@/components/wrapper/Section.astro";
+import { slotContent } from "@/utils/slots.ts";
+
+type Props = Omit<
+  ComponentProps<typeof Section>,
+  | "theme"
+  | "paddingTop"
+  | "paddingBottom"
+  | "gap"
+  | "align"
+  | "fullHeight"
+  | "containerClass"
+  | "containerAttrs"
+>;
+
+const { render = true, class: className, ...rest } = Astro.props;
+
+const intro = await slotContent(Astro.slots, "intro");
+const steps = await slotContent(Astro.slots);
+const count = (steps?.match(/feature-row_wrap/g) ?? []).length;
+const label = (step: number) => String(step).padStart(2, "0");
+---
+
+{
+  render && steps && (
+    <Section
+      class={["feature-steps_wrap", className].filter(Boolean).join(" ")}
+      data-motion-scope
+      {...rest}
+    >
+      <Fragment set:html={intro} />
+      <div class="feature-steps_track">
+        <div class="feature-steps_pin">
+          <div class="feature-steps_list">
+            <Fragment set:html={steps} />
+          </div>
+          <div class="feature-steps_progress" aria-hidden="true">
+            <span class="feature-steps_count">
+              <span class="feature-steps_digits">
+                {Array.from({ length: count }, (_, index) => (
+                  <span>{label(index + 1)}</span>
+                ))}
+              </span>
+            </span>
+            <span class="feature-steps_rail">
+              <span class="feature-steps_fill" />
+            </span>
+            <span>{label(count)}</span>
+          </div>
+        </div>
+      </div>
+    </Section>
+  )
+}
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { parts, ready, reveal } from "@/utils/motion.ts";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const motion = "(prefers-reduced-motion: no-preference)";
+
+  document.querySelectorAll<HTMLElement>(".feature-steps_wrap").forEach((wrap) => {
+    const track = wrap.querySelector<HTMLElement>(".feature-steps_track")!;
+    const pin = wrap.querySelector<HTMLElement>(".feature-steps_pin")!;
+    const digits = wrap.querySelector<HTMLElement>(".feature-steps_digits");
+    const fill = wrap.querySelector<HTMLElement>(".feature-steps_fill");
+    const rows = Array.from(
+      wrap.querySelectorAll<HTMLElement>(".feature-steps_list > *"),
+    );
+    const intro = Array.from(track.parentElement!.children).filter(
+      (child) => child !== track,
+    );
+    const count = rows.length;
+    const timelines = new WeakMap<HTMLElement, gsap.core.Timeline>();
+    const media = gsap.matchMedia();
+
+    media.add(motion, () => {
+      ready(wrap);
+      intro.forEach((element) => {
+        ScrollTrigger.create({
+          trigger: element,
+          start: "top 82%",
+          once: true,
+          onEnter: () => reveal(element),
+        });
+      });
+    });
+
+    media.add(`${motion} and (max-width: 63.99rem)`, () => {
+      rows.forEach((row) => {
+        ScrollTrigger.create({
+          trigger: row,
+          start: "top 78%",
+          once: true,
+          onEnter: () => reveal(row),
+        });
+      });
+    });
+
+    media.add(`${motion} and (min-width: 64rem)`, () => {
+      let current = -1;
+      wrap.setAttribute("data-pinned", "");
+      rows.forEach((row) => gsap.set(row.children, { autoAlpha: 0 }));
+
+      const show = (row: HTMLElement) => {
+        timelines.get(row)?.kill();
+        gsap.set(parts(row), { autoAlpha: 0 });
+        gsap.set(row.children, { autoAlpha: 1, y: 0, scale: 1 });
+        timelines.set(row, reveal(row, { delay: 0.2 }));
+      };
+
+      const conceal = (row: HTMLElement, direction: number) => {
+        timelines.get(row)?.kill();
+        const [content, visual] = Array.from(row.children);
+        timelines.set(
+          row,
+          gsap
+            .timeline({ defaults: { duration: 0.32, ease: "power2.in" } })
+            .to(content, { autoAlpha: 0, y: -28 * direction }, 0)
+            .to(visual, { autoAlpha: 0, scale: 0.97 }, 0),
+        );
+      };
+
+      const go = (index: number, direction: number) => {
+        if (index === current) return;
+        if (current >= 0) conceal(rows[current], direction);
+        show(rows[index]);
+        current = index;
+        gsap.to(digits, {
+          yPercent: (-100 * index) / count,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        gsap.to(fill, {
+          scaleX: (index + 1) / count,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+      };
+
+      gsap.set(fill, { scaleX: 0, transformOrigin: "0 50%" });
+
+      ScrollTrigger.create({
+        trigger: pin,
+        start: "top 80%",
+        once: true,
+        onEnter: () => go(0, 1),
+      });
+
+      ScrollTrigger.create({
+        trigger: pin,
+        start: "center 54%",
+        end: () => `+=${count * window.innerHeight * 0.6}`,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) =>
+          go(
+            Math.min(count - 1, Math.floor(self.progress * count)),
+            self.direction,
+          ),
+      });
+
+      return () => wrap.removeAttribute("data-pinned");
+    });
+  });
+</script>
+
+<style is:global>
+  @layer components {
+    .feature-steps_track {
+      width: 100%;
+    }
+
+    .feature-steps_pin {
+      position: relative;
+    }
+
+    .feature-steps_list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    .feature-steps_progress {
+      display: none;
+    }
+
+    /* Pinned */
+    .feature-steps_wrap[data-pinned] {
+      & .feature-steps_list {
+        display: grid;
+        & > * {
+          grid-area: 1 / 1;
+        }
+      }
+
+      & .feature-steps_progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        color: var(--text-2);
+        font-size: var(--text-small);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.45;
+      }
+
+      & .feature-steps_count {
+        height: 1.45em;
+        overflow: clip;
+        color: var(--text);
+        font-weight: var(--primary-bold);
+      }
+
+      & .feature-steps_digits {
+        display: flex;
+        flex-direction: column;
+      }
+
+      & .feature-steps_rail {
+        width: 6rem;
+        height: var(--border-width);
+        background-color: var(--border);
+      }
+
+      & .feature-steps_fill {
+        display: block;
+        height: 100%;
+        background-color: var(--orange-700);
+      }
+    }
+  }
+</style>
