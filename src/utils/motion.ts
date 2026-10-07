@@ -1,7 +1,8 @@
 import { gsap } from "gsap";
+import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(SplitText);
+gsap.registerPlugin(DrawSVGPlugin, SplitText);
 
 type Motion = { from: gsap.TweenVars; to: gsap.TweenVars };
 
@@ -119,6 +120,22 @@ export function reveal(scope: Element, { delay = 0, stagger = 0.06 } = {}) {
             duration: 0.9,
             ease: "power3.out",
             stagger: 0.1,
+          },
+          at,
+        );
+      return;
+    }
+    if (kind === "stroke") {
+      timeline
+        .set(element, { autoAlpha: 1 }, at)
+        .fromTo(
+          element.querySelectorAll("path, line"),
+          { drawSVG: "0%" },
+          {
+            drawSVG: "100%",
+            duration: 1.1,
+            ease: "power2.inOut",
+            stagger: 0.08,
           },
           at,
         );

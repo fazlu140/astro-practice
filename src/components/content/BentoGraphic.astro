@@ -1,14 +1,13 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Img from "@/components/media/Img.astro";
+import Icon from "@/components/media/Icon.astro";
 import cart from "@/assets/graphics/bento/cart.svg";
 import bolt from "@/assets/graphics/bento/bolt.svg";
 import lock from "@/assets/graphics/bento/lock.svg";
 import stripe from "@/assets/graphics/bento/stripe.svg";
 import alert from "@/assets/graphics/bento/alert.svg";
 import logo from "@/assets/graphics/bento/logo.svg";
-import connectorLeft from "@/assets/graphics/bento/connector-left.svg";
-import connectorRight from "@/assets/graphics/bento/connector-right.svg";
 import areaBack from "@/assets/graphics/bento/area-back.svg";
 import areaFront from "@/assets/graphics/bento/area-front.svg";
 import lineBack from "@/assets/graphics/bento/line-back.svg";
@@ -124,11 +123,19 @@ const tasks = [
               </span>
             ))}
           </div>
-          <div class="bento-graphic_links" data-motion="fade">
-            <Img src={connectorLeft} width={61} height={29} transparent />
-            <span />
-            <Img src={connectorRight} width={61} height={31} transparent />
-          </div>
+          <svg
+            class="bento-graphic_links"
+            viewBox="0 0 149 31"
+            fill="none"
+            data-motion="stroke"
+          >
+            <path d="M60.5 0V6.35C60.5 9.857 57.657 12.7 54.15 12.7H13.593C6.362 12.7 0.5 18.562 0.5 25.793V31" />
+            <path d="M74.5 0V31" />
+            <path d="M88.5 0V6.35C88.5 9.857 91.343 12.7 94.85 12.7H135.407C142.638 12.7 148.5 18.562 148.5 25.793V31" />
+            <circle r="2.2" />
+            <circle r="2.2" />
+            <circle r="2.2" />
+          </svg>
           <div class="bento-graphic_card bento-graphic_table" data-motion="rise">
             <div class="bento-graphic_line between">
               <span class="bento-graphic_line">
@@ -207,11 +214,22 @@ const tasks = [
             <span class="bento-graphic_bar faint" style="--_w: 151" />
             <span class="bento-graphic_bar faint" style="--_w: 74" />
             <div class="bento-graphic_plot">
-              <Img src={areaBack} width={229} height={66} transparent />
-              <Img src={areaFront} width={230} height={44} transparent />
-              <Img src={lineBack} width={230} height={21} transparent />
-              <Img src={lineFront} width={230} height={17} transparent />
-              <span class="bento-graphic_wipe" data-motion="wipe" />
+              <Img
+                src={areaBack}
+                width={229}
+                height={66}
+                transparent
+                data-motion="fade"
+              />
+              <Img
+                src={areaFront}
+                width={230}
+                height={44}
+                transparent
+                data-motion="fade"
+              />
+              <Icon src={lineBack} data-motion="stroke" />
+              <Icon src={lineFront} data-motion="stroke" />
             </div>
           </div>
         </div>
@@ -244,6 +262,47 @@ const tasks = [
     </div>
   )
 }
+
+<script>
+  import { gsap } from "gsap";
+  import { MotionPathPlugin } from "gsap/MotionPathPlugin";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(MotionPathPlugin, ScrollTrigger);
+
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    document.querySelectorAll<SVGSVGElement>(".bento-graphic_links").forEach((links) => {
+      const paths = Array.from(links.querySelectorAll("path"));
+      const sparks = Array.from(links.querySelectorAll("circle"));
+      const loop = gsap.timeline({ repeat: -1, repeatDelay: 1.2, paused: true });
+
+      sparks.forEach((spark, index) => {
+        const path = paths[index];
+        const at = index * 0.4;
+        if (!path) return;
+        loop
+          .set(spark, { opacity: 1 }, at)
+          .to(
+            spark,
+            {
+              motionPath: { path, align: path, alignOrigin: [0.5, 0.5] },
+              duration: 0.9,
+              ease: "power1.inOut",
+            },
+            at,
+          )
+          .to(spark, { opacity: 0, duration: 0.15 }, at + 0.8);
+      });
+
+      ScrollTrigger.create({
+        trigger: links,
+        start: "top bottom",
+        end: "bottom top",
+        onToggle: (self) => loop.paused(!self.isActive),
+      });
+    });
+  });
+</script>
 
 <style is:global>
   @layer components {
@@ -553,21 +612,17 @@ const tasks = [
       position: absolute;
       top: calc(var(--_u) * 46);
       left: calc(var(--_u) * 134);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
       width: calc(var(--_u) * 149);
-      & .image {
-        width: calc(var(--_u) * 60);
-        height: calc(var(--_u) * 30);
+      height: calc(var(--_u) * 31);
+      overflow: visible;
+      & path {
+        stroke: color-mix(in lab, var(--neutral-600) 45%, transparent);
+        stroke-width: 1;
+        vector-effect: non-scaling-stroke;
       }
-      & .image:last-child {
-        transform: scaleX(-1);
-      }
-      & span {
-        width: var(--border-width);
-        height: calc(var(--_u) * 30);
-        background-color: var(--border);
+      & circle {
+        fill: var(--orange-500);
+        opacity: 0;
       }
     }
 
@@ -716,10 +771,11 @@ const tasks = [
       position: relative;
       height: calc(var(--_u) * 78);
       margin-top: calc(var(--_u) * 5.5);
-      & .image {
+      & > :is(.image, .icon) {
         position: absolute;
         left: 0;
         width: 100%;
+        max-width: none;
       }
       & > :nth-child(1) {
         top: calc(var(--_u) * 12);
@@ -739,20 +795,12 @@ const tasks = [
       }
     }
 
-    .bento-graphic_wipe,
     .bento-graphic_plot::after {
+      content: "";
       position: absolute;
       inset: 0;
       background-color: var(--white);
       transform-origin: right;
-    }
-
-    .bento-graphic_wipe {
-      opacity: 0;
-    }
-
-    .bento-graphic_plot::after {
-      content: "";
       scale: 0 1;
     }
 
