@@ -44,14 +44,11 @@
     });
 
     let timer = 0;
-    let height = document.body.offsetHeight;
-    const observer = new ResizeObserver(() => {
-      if (document.body.offsetHeight === height) return;
-      height = document.body.offsetHeight;
+    const settle = () => {
       window.clearTimeout(timer);
-      timer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
-    });
-    observer.observe(document.body);
+      timer = window.setTimeout(() => ScrollTrigger.refresh(), 350);
+    };
+    document.addEventListener("toggle", settle, true);
 
     requestAnimationFrame(() => {
       ScrollTrigger.sort();
@@ -60,7 +57,7 @@
 
     return () => {
       window.clearTimeout(timer);
-      observer.disconnect();
+      document.removeEventListener("toggle", settle, true);
     };
   });
 </script>

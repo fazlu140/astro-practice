@@ -107,11 +107,19 @@ const label = (step: number) => String(step).padStart(2, "0");
       wrap.setAttribute("data-pinned", "");
       rows.forEach((row) => gsap.set(row.children, { autoAlpha: 0 }));
 
-      const show = (row: HTMLElement) => {
+      const show = (row: HTMLElement, first: boolean) => {
         timelines.get(row)?.kill();
         gsap.set(parts(row), { autoAlpha: 0 });
-        gsap.set(row.children, { autoAlpha: 1, y: 0, scale: 1 });
-        timelines.set(row, reveal(row, { delay: 0.2 }));
+        if (first) {
+          gsap.fromTo(
+            row.children,
+            { autoAlpha: 0, y: 24, scale: 1 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          );
+        } else {
+          gsap.set(row.children, { autoAlpha: 1, y: 0, scale: 1 });
+        }
+        timelines.set(row, reveal(row, { delay: first ? 0.1 : 0.2 }));
       };
 
       const conceal = (row: HTMLElement, direction: number) => {
@@ -129,7 +137,7 @@ const label = (step: number) => String(step).padStart(2, "0");
       const go = (index: number, direction: number) => {
         if (index === current) return;
         if (current >= 0) conceal(rows[current], direction);
-        show(rows[index]);
+        show(rows[index], current < 0);
         current = index;
         gsap.to(digits, {
           yPercent: (-100 * index) / count,
@@ -185,6 +193,17 @@ const label = (step: number) => String(step).padStart(2, "0");
       display: flex;
       flex-direction: column;
       gap: var(--space-8);
+      @media (width >= 64rem) and (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+        .feature-steps_wrap:not([data-pinned]) & {
+          display: grid;
+          & > * {
+            grid-area: 1 / 1;
+          }
+          & > :not(:first-child) > * {
+            visibility: hidden;
+          }
+        }
+      }
     }
 
     .feature-steps_progress {

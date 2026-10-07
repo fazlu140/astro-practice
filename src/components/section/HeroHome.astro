@@ -56,11 +56,13 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
         <div class="hero-home_artboard">
           <div class="hero-home_glow" data-motion />
           <div class="hero-home_dots" />
-          <div class="hero-home_ring" data-motion />
-          <div class="hero-home_ring" data-motion />
-          <div class="hero-home_ring" data-motion />
-          <div class="hero-home_ring" data-motion />
-          <div class="hero-home_ring" data-motion />
+          <div class="hero-home_rings" data-motion>
+            <div class="hero-home_ring" />
+            <div class="hero-home_ring" />
+            <div class="hero-home_ring" />
+            <div class="hero-home_ring" />
+            <div class="hero-home_ring" />
+          </div>
 
           <div class="hero-home_tile" data-motion>
             <Icon src={tileMark} />
@@ -206,8 +208,15 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       const title = find(".hero-home_title")[0] as HTMLElement;
       ready(hero);
 
-      document.fonts.ready.then(() => {
+      const settled = new Promise<void>((resolve) => {
+        if (document.readyState === "complete") return resolve();
+        window.addEventListener("load", () => resolve(), { once: true });
+        window.setTimeout(resolve, 900);
+      });
+
+      Promise.all([document.fonts.ready, settled]).then(() => {
         const timeline = gsap.timeline({
+          delay: 0.1,
           defaults: { ease: "power3.out" },
           onComplete: () => hero.setAttribute("data-live", ""),
         });
@@ -220,9 +229,9 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
             0,
           )
           .fromTo(
-            find(".hero-home_ring").reverse(),
-            { autoAlpha: 0, scale: 0.86 },
-            { autoAlpha: 1, scale: 1, duration: 1.2, stagger: 0.09 },
+            find(".hero-home_rings"),
+            { autoAlpha: 0, scale: 0.9, transformOrigin: "50% 26%" },
+            { autoAlpha: 1, scale: 1, duration: 1.3 },
             0.05,
           )
           .fromTo(
@@ -400,6 +409,11 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       opacity: 0.45;
     }
 
+    .hero-home_rings {
+      position: absolute;
+      inset: 0;
+    }
+
     .hero-home_ring {
       --_w: 1174;
       --_h: 1173;
@@ -416,25 +430,25 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       border-radius: calc(var(--_u) * var(--_r));
       box-shadow: 0 0 0 var(--border-width)
         color-mix(in lab, var(--neutral-200) 40%, transparent);
-      &:nth-of-type(4) {
+      &:nth-of-type(2) {
         --_w: 1028;
         --_h: 1028;
         --_y: -329;
         --_r: 64;
       }
-      &:nth-of-type(5) {
+      &:nth-of-type(3) {
         --_w: 880;
         --_h: 847;
         --_y: -230;
         --_r: 51;
       }
-      &:nth-of-type(6) {
+      &:nth-of-type(4) {
         --_w: 697;
         --_h: 654;
         --_y: -131;
         --_r: 29;
       }
-      &:nth-of-type(7) {
+      &:nth-of-type(5) {
         --_w: 460;
         --_h: 485;
         --_y: -62;
@@ -654,6 +668,18 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       &.hero-home_payment {
         --_size: calc(var(--_u) * 10.7);
       }
+    }
+
+    /* Intro */
+    .hero-home_wrap:not([data-live])
+      :is(
+        .hero-home_glow,
+        .hero-home_rings,
+        .hero-home_tile,
+        .hero-home_card,
+        .hero-home_shield
+      ) {
+      will-change: transform, opacity;
     }
 
     /* Ambient */
