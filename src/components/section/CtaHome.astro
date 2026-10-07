@@ -73,10 +73,16 @@ const {
 
 <script>
   document.querySelectorAll<HTMLElement>(".cta-home_wrap").forEach((wrap) => {
+    const spot = wrap.querySelector<HTMLElement>(".cta-home_spot");
+    let frame = 0;
+    if (!spot) return;
     wrap.addEventListener("pointermove", (event) => {
-      const box = wrap.getBoundingClientRect();
-      wrap.style.setProperty("--_x", `${event.clientX - box.left}px`);
-      wrap.style.setProperty("--_y", `${event.clientY - box.top}px`);
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        const box = wrap.getBoundingClientRect();
+        frame = 0;
+        spot.style.translate = `${event.clientX - box.left}px ${event.clientY - box.top}px`;
+      });
     });
   });
 </script>
@@ -126,8 +132,8 @@ const {
         color-mix(in lab, var(--white) 22%, transparent),
         transparent
       );
+      margin: -14rem 0 0 -14rem;
       opacity: 0;
-      translate: calc(var(--_x, 50%) - 50%) calc(var(--_y, 50%) - 50%);
       transition: opacity 400ms var(--hover-ease);
     }
 

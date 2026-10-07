@@ -397,8 +397,7 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
         transparent calc(var(--_u) * 1.2)
       );
       background-size: calc(var(--_u) * 7) calc(var(--_u) * 7);
-      mix-blend-mode: soft-light;
-      opacity: 0.6;
+      opacity: 0.45;
     }
 
     .hero-home_ring {
@@ -664,26 +663,6 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
           animation: hero-home-glow 12s ease-in-out infinite alternate;
         }
 
-        & .hero-home_ring {
-          animation: hero-home-breathe 8s ease-in-out infinite alternate;
-          &:nth-of-type(4) {
-            animation-duration: 9s;
-            animation-delay: -1.6s;
-          }
-          &:nth-of-type(5) {
-            animation-duration: 7s;
-            animation-delay: -3.2s;
-          }
-          &:nth-of-type(6) {
-            animation-duration: 10s;
-            animation-delay: -4.8s;
-          }
-          &:nth-of-type(7) {
-            animation-duration: 6.5s;
-            animation-delay: -6.4s;
-          }
-        }
-
         & .hero-home_tile {
           animation: hero-home-hover 5s ease-in-out infinite alternate;
           &::after {
@@ -817,13 +796,6 @@ const { render = true, heading, text, class: className, ...rest } = Astro.props;
       to {
         opacity: 0.75;
         scale: 1.06;
-      }
-    }
-
-    @keyframes hero-home-breathe {
-      to {
-        opacity: 0.6;
-        scale: 1.025;
       }
     }
 

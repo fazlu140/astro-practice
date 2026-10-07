@@ -45,6 +45,7 @@ if (import.meta.env.DEV && render && !Svg) {
       height: auto;
       aspect-ratio: 1 / 1;
       max-width: 100%;
+      isolation: isolate;
 
       &.small {
         --_size: 1em;

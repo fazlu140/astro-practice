@@ -9,6 +9,18 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
+  const idle = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) =>
+        entry.target.toggleAttribute("data-idle", !entry.isIntersecting),
+      );
+    },
+    { rootMargin: "200px 0px" },
+  );
+  document
+    .querySelectorAll(".section, .footer_wrap")
+    .forEach((section) => idle.observe(section));
+
   gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
     const scopes = gsap.utils.toArray<HTMLElement>(
       '[data-motion-scope="view"]',

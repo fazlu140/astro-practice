@@ -227,6 +227,12 @@
   }
 }
 
+[data-idle] *,
+[data-idle] *::before,
+[data-idle] *::after {
+  animation-play-state: paused !important;
+}
+
 @keyframes motion-failsafe {
   to {
     visibility: visible;
