@@ -73,46 +73,59 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
 
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
-    const cleanups: Array<() => void> = [];
-    document
-      .querySelectorAll<HTMLElement>(".step-timeline_wrap")
-      .forEach((wrap) => {
-        const find = gsap.utils.selector(wrap);
-        const track = find(".step-timeline_track")[0] as HTMLElement;
-        const fill = find(".step-timeline_fill");
-        const marker = find(".step-timeline_marker");
-        const items = find(".step-timeline_item") as HTMLElement[];
-        const stops = find(".step-timeline_stop") as HTMLElement[];
-        const ticked = items.map(() => false);
-        let current = -1;
+  const motion = "(prefers-reduced-motion: no-preference)";
 
+  document
+    .querySelectorAll<HTMLElement>(".step-timeline_wrap")
+    .forEach((wrap) => {
+      const find = gsap.utils.selector(wrap);
+      const track = find(".step-timeline_track")[0] as HTMLElement;
+      const line = find(".step-timeline_line");
+      const fill = find(".step-timeline_fill");
+      const marker = find(".step-timeline_marker");
+      const items = find(".step-timeline_item") as HTMLElement[];
+      const stops = find(".step-timeline_stop") as HTMLElement[];
+      const ticked = items.map(() => false);
+      const media = gsap.matchMedia();
+      let current = -1;
+
+      const tick = (index: number) => {
+        ticked[index] = true;
+        gsap.fromTo(
+          items[index].querySelectorAll(".step-timeline_tick"),
+          { scale: 0 },
+          {
+            scale: 1,
+            duration: 0.4,
+            ease: "back.out(2.4)",
+            stagger: 0.07,
+            overwrite: true,
+          },
+        );
+      };
+
+      const activate = (index: number) =>
+        items.forEach((item, step) =>
+          item.classList.toggle("active", step === index),
+        );
+
+      media.add(motion, () => {
         ready(wrap);
         gsap.set(find(".step-timeline_tick"), { scale: 0 });
         gsap.set(fill, { scaleX: 0, scaleY: 0, transformOrigin: "0 0" });
-
-        const tick = (index: number) => {
-          ticked[index] = true;
-          gsap.fromTo(
-            items[index].querySelectorAll(".step-timeline_tick"),
-            { scale: 0 },
-            {
-              scale: 1,
-              duration: 0.4,
-              ease: "back.out(2.4)",
-              stagger: 0.07,
-              overwrite: true,
-            },
-          );
+        return () => {
+          current = -1;
+          ticked.fill(false);
+          activate(-1);
         };
+      });
 
+      /* Side by side: play once when the section arrives */
+      media.add(`${motion} and (min-width: 48rem)`, () => {
         const go = (index: number, duration = 0.65) => {
-          const line = track.getBoundingClientRect();
+          const box = track.getBoundingClientRect();
           const stop = stops[index].getBoundingClientRect();
-          const across = line.width > line.height;
-          const x = across ? stop.left + stop.width / 2 - line.left : 0;
-          const y = across ? 0 : stop.top + stop.height / 2 - line.top;
-          const progress = across ? x / line.width : y / line.height;
+          const x = stop.left + stop.width / 2 - box.left;
           const moved = index !== current;
           current = index;
           ticked.forEach((done, step) => {
@@ -120,24 +133,21 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
           });
           gsap.to(marker, {
             x,
-            y,
+            y: 0,
             duration,
             ease: "power2.inOut",
             overwrite: true,
           });
           gsap.to(fill, {
-            scaleX: across ? progress : 1,
-            scaleY: across ? 1 : progress,
+            scaleX: x / box.width,
+            scaleY: 1,
             duration,
             ease: "power2.inOut",
             overwrite: true,
           });
           gsap.delayedCall(duration * 0.7, () => {
             if (moved || !ticked[index]) tick(index);
-            if (current !== index) return;
-            items.forEach((item, step) =>
-              item.classList.toggle("active", step === index),
-            );
+            if (current === index) activate(index);
           });
         };
 
@@ -158,7 +168,7 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
             )
             .set(track, { autoAlpha: 1 }, 0.1)
             .fromTo(
-              [...find(".step-timeline_line"), ...marker, ...stops],
+              [...line, ...marker, ...stops],
               { autoAlpha: 0 },
               { autoAlpha: 1, duration: 0.4, stagger: 0.05 },
               0.1,
@@ -184,10 +194,97 @@ const { render = true, steps = [], class: className, ...rest } = Astro.props;
 
         const settle = () => current >= 0 && go(current, 0.01);
         window.addEventListener("resize", settle);
-        cleanups.push(() => window.removeEventListener("resize", settle));
+        return () => window.removeEventListener("resize", settle);
       });
-    return () => cleanups.forEach((cleanup) => cleanup());
-  });
+
+      /* Stacked: the marker follows the scroll */
+      media.add(`${motion} and (max-width: 47.99rem)`, () => {
+        const first = stops[0];
+        const last = stops[stops.length - 1];
+        let offsets: number[] = [];
+
+        const measure = () => {
+          const base = first.getBoundingClientRect().top;
+          offsets = stops.map((stop) => stop.getBoundingClientRect().top - base);
+        };
+        const distance = () => offsets[offsets.length - 1] ?? 0;
+
+        const reach = (progress: number) => {
+          const travelled = progress * distance();
+          let index = 0;
+          offsets.forEach((offset, step) => {
+            if (travelled >= offset - 2) index = step;
+          });
+          if (index === current) return;
+          current = index;
+          activate(index);
+          ticked.forEach((done, step) => {
+            if (!done && step <= index) tick(step);
+          });
+        };
+
+        measure();
+        gsap.set(track, { autoAlpha: 1 });
+        gsap.set(fill, { scaleX: 1, scaleY: 0 });
+
+        gsap.fromTo(
+          [...line, ...marker],
+          { autoAlpha: 0 },
+          {
+            autoAlpha: 1,
+            duration: 0.4,
+            scrollTrigger: { trigger: wrap, start: "top 85%", once: true },
+          },
+        );
+
+        items.forEach((item, index) => {
+          ScrollTrigger.create({
+            trigger: item,
+            start: "top 85%",
+            once: true,
+            onEnter: () => {
+              gsap.fromTo(
+                item.querySelectorAll(
+                  ".step-timeline_chip, .step-timeline_stop, .step-timeline_card",
+                ),
+                { autoAlpha: 0, y: 20 },
+                {
+                  autoAlpha: 1,
+                  y: 0,
+                  duration: 0.6,
+                  ease: "power3.out",
+                  stagger: 0.06,
+                },
+              );
+              if (index === 0) reach(0);
+            },
+          });
+        });
+
+        gsap
+          .timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: first,
+              start: "center 45%",
+              endTrigger: last,
+              end: "center 45%",
+              scrub: 0.4,
+              invalidateOnRefresh: true,
+              onRefresh: measure,
+              onUpdate: (self) => reach(self.progress),
+            },
+          })
+          .to(marker, { x: 0, y: () => distance() }, 0)
+          .to(
+            fill,
+            {
+              scaleY: () => distance() / track.getBoundingClientRect().height,
+            },
+            0,
+          );
+      });
+    });
 </script>
 
 <style is:global>
