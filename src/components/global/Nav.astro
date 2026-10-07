@@ -66,7 +66,71 @@ const { render = true, overlap = false } = Astro.props;
 </noscript>
 
 <script>
+  import { gsap } from "gsap";
+  import { Flip } from "gsap/Flip";
+
+  gsap.registerPlugin(Flip);
+
   const nav = document.querySelector<HTMLElement>(".nav_wrap");
+  const list = nav?.querySelector<HTMLElement>(".nav_links");
+
+  if (list) {
+    gsap.matchMedia().add("(width >= 48rem) and (hover: hover)", () => {
+      const links = Array.from(list.querySelectorAll<HTMLElement>(".nav_link"));
+      const current = list.querySelector<HTMLElement>('[aria-current="page"]');
+      const pill = document.createElement("span");
+      let shown = false;
+
+      pill.className = "nav_pill";
+      pill.setAttribute("aria-hidden", "true");
+      list.classList.add("piloted");
+
+      const moveTo = (link: HTMLElement | null) => {
+        if (!link) {
+          shown = false;
+          gsap.to(pill, { autoAlpha: 0, duration: 0.2, overwrite: true });
+          return;
+        }
+        if (!shown) {
+          shown = true;
+          link.append(pill);
+          gsap.fromTo(
+            pill,
+            { autoAlpha: 0, scale: 0.85 },
+            { autoAlpha: 1, scale: 1, duration: 0.25, overwrite: true },
+          );
+          return;
+        }
+        if (pill.parentElement === link) return;
+        const state = Flip.getState(pill);
+        link.append(pill);
+        Flip.from(state, { duration: 0.45, ease: "power3.out", scale: true });
+      };
+
+      const enter = (event: Event) => moveTo(event.currentTarget as HTMLElement);
+      const leave = () => moveTo(current);
+
+      links.forEach((link) => {
+        link.addEventListener("pointerenter", enter);
+        link.addEventListener("focus", enter);
+      });
+      list.addEventListener("pointerleave", leave);
+      list.addEventListener("focusout", leave);
+      if (current) moveTo(current);
+
+      return () => {
+        links.forEach((link) => {
+          link.removeEventListener("pointerenter", enter);
+          link.removeEventListener("focus", enter);
+        });
+        list.removeEventListener("pointerleave", leave);
+        list.removeEventListener("focusout", leave);
+        list.classList.remove("piloted");
+        pill.remove();
+      };
+    });
+  }
+
   const toggle = nav?.querySelector<HTMLButtonElement>(".nav_toggle");
 
   if (nav && toggle) {
@@ -122,8 +186,7 @@ const { render = true, overlap = false } = Astro.props;
         position: absolute;
         inset: 0;
         z-index: -1;
-        background-color: color-mix(in lab, var(--background) 40%, transparent);
-        backdrop-filter: blur(1rem);
+        background-color: color-mix(in lab, var(--background) 94%, transparent);
         border-bottom: var(--border-width) solid var(--border);
       }
 
@@ -323,15 +386,31 @@ const { render = true, overlap = false } = Astro.props;
       }
 
       .nav_link {
-        padding: 0.5rem;
-        &[aria-current="page"] {
+        position: relative;
+        isolation: isolate;
+        padding: 0.5rem 0.75rem;
+        border-radius: var(--radius-round);
+        .nav_links:not(.piloted) &[aria-current="page"] {
           background-color: var(--background-2);
         }
         @media (hover: hover) {
-          &:hover {
+          .nav_links:not(.piloted) &:hover {
             background-color: var(--background-2);
           }
         }
+        &:active .nav_pill {
+          scale: 0.94;
+        }
+      }
+
+      .nav_pill {
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        background-color: color-mix(in lab, var(--text) 7%, transparent);
+        border-radius: inherit;
+        pointer-events: none;
+        transition: scale 150ms var(--hover-ease);
       }
     }
   }
